@@ -1,0 +1,390 @@
+{
+ "generated_from": "project_site/prep/build_manifest.py",
+ "pen": [
+  {
+   "task": "pen",
+   "shape": "circle",
+   "board": "A",
+   "tilt": 8.65,
+   "board_label": "board A",
+   "source": "hardware",
+   "ipcr": {
+    "shift_mm": {
+     "mean": 0.484,
+     "min": 0.439,
+     "max": 0.525,
+     "n": 3
+    },
+    "shape_mm": {
+     "mean": 1.165,
+     "min": 1.095,
+     "max": 1.258,
+     "n": 3
+    }
+   },
+   "np": {
+    "shift_mm": {
+     "mean": 11.309,
+     "min": 11.251,
+     "max": 11.343,
+     "n": 3
+    },
+    "pred_mm": {
+     "mean": 11.182,
+     "min": 11.171,
+     "max": 11.191,
+     "n": 3
+    },
+    "shape_mm": {
+     "mean": 1.379,
+     "min": 1.371,
+     "max": 1.385,
+     "n": 3
+    }
+   },
+   "src": "experiments/sim2real_unified/hw/eval_gap1/all_g1.jsonl (hw_eval.py draw, GAP 1 mm)",
+   "status": "done"
+  },
+  {
+   "task": "pen",
+   "shape": "circle",
+   "board": "B16r4",
+   "tilt": 16.46,
+   "board_label": "board B16 (re-placed)",
+   "source": "hardware",
+   "ipcr": {
+    "shift_mm": {
+     "mean": 0.377,
+     "min": 0.374,
+     "max": 0.38,
+     "n": 3
+    },
+    "shape_mm": {
+     "mean": 1.134,
+     "min": 1.099,
+     "max": 1.171,
+     "n": 3
+    }
+   },
+   "np": {
+    "shift_mm": {
+     "mean": 21.641,
+     "min": 21.621,
+     "max": 21.662,
+     "n": 3
+    },
+    "pred_mm": {
+     "mean": 21.658,
+     "min": 21.608,
+     "max": 21.684,
+     "n": 3
+    },
+    "shape_mm": {
+     "mean": 2.174,
+     "min": 2.131,
+     "max": 2.213,
+     "n": 3
+    }
+   },
+   "src": "experiments/sim2real_unified/hw/eval_gap1/all_g1.jsonl (hw_eval.py draw, GAP 1 mm)",
+   "status": "done",
+   "video": "assets/media/pen_compare_B16r4.mp4",
+   "poster": "assets/media/pen_compare_B16r4.jpg",
+   "scene": "assets/data/scenes/pen_B16r4_hw.json"
+  },
+  {
+   "task": "pen",
+   "shape": "circle",
+   "board": "B16",
+   "tilt": 16.87,
+   "board_label": "board B16",
+   "source": "hardware",
+   "ipcr": {
+    "shift_mm": {
+     "mean": 0.39,
+     "min": 0.377,
+     "max": 0.397,
+     "n": 3
+    },
+    "shape_mm": {
+     "mean": 1.099,
+     "min": 1.062,
+     "max": 1.134,
+     "n": 3
+    }
+   },
+   "np": {
+    "shift_mm": {
+     "mean": 25.234,
+     "min": 24.951,
+     "max": 25.4,
+     "n": 3
+    },
+    "pred_mm": {
+     "mean": 25.377,
+     "min": 25.273,
+     "max": 25.474,
+     "n": 3
+    },
+    "shape_mm": {
+     "mean": 2.265,
+     "min": 2.09,
+     "max": 2.367,
+     "n": 3
+    }
+   },
+   "src": "experiments/sim2real_unified/hw/eval_gap1/all_g1.jsonl (hw_eval.py draw, GAP 1 mm)",
+   "status": "done"
+  },
+  {
+   "task": "pen",
+   "shape": "square",
+   "board": "A",
+   "tilt": 8.65,
+   "board_label": "board A",
+   "source": "sim",
+   "ipcr": {
+    "shift_mm": {
+     "mean": 0.307,
+     "min": 0.153,
+     "max": 0.461,
+     "n": 2
+    }
+   },
+   "np": {
+    "shift_mm": {
+     "mean": 11.062,
+     "min": 10.671,
+     "max": 11.453,
+     "n": 2
+    },
+    "pred_ratio": [
+     0.95,
+     1.012
+    ]
+   },
+   "src": "experiments/sim2real_unified/pen_shapes.json (PREREG_PEN_SHAPES)",
+   "status": "sim; hardware pending"
+  },
+  {
+   "task": "pen",
+   "shape": "square",
+   "board": "B16r4",
+   "tilt": 16.46,
+   "board_label": "board B16 (re-placed)",
+   "source": "sim",
+   "ipcr": {
+    "shift_mm": {
+     "mean": 0.506,
+     "min": 0.499,
+     "max": 0.513,
+     "n": 2
+    }
+   },
+   "np": {
+    "shift_mm": {
+     "mean": 22.233,
+     "min": 22.221,
+     "max": 22.244,
+     "n": 2
+    },
+    "pred_ratio": [
+     1.003,
+     1.004
+    ]
+   },
+   "src": "experiments/sim2real_unified/pen_shapes.json (PREREG_PEN_SHAPES)",
+   "status": "sim; hardware pending"
+  },
+  {
+   "task": "pen",
+   "shape": "square",
+   "board": "B16",
+   "tilt": 16.87,
+   "board_label": "board B16",
+   "source": "sim",
+   "ipcr": {
+    "shift_mm": {
+     "mean": 0.597,
+     "min": 0.579,
+     "max": 0.614,
+     "n": 2
+    }
+   },
+   "np": {
+    "shift_mm": {
+     "mean": 25.66,
+     "min": 25.639,
+     "max": 25.681,
+     "n": 2
+    },
+    "pred_ratio": [
+     1.002,
+     1.0
+    ]
+   },
+   "src": "experiments/sim2real_unified/pen_shapes.json (PREREG_PEN_SHAPES)",
+   "status": "sim; hardware pending"
+  },
+  {
+   "task": "pen",
+   "shape": "star",
+   "board": "A",
+   "tilt": 8.65,
+   "board_label": "board A",
+   "source": "sim",
+   "ipcr": {
+    "shift_mm": {
+     "mean": 0.554,
+     "min": 0.494,
+     "max": 0.614,
+     "n": 2
+    }
+   },
+   "np": {
+    "shift_mm": {
+     "mean": 11.464,
+     "min": 11.421,
+     "max": 11.507,
+     "n": 2
+    },
+    "pred_ratio": [
+     1.037,
+     1.031
+    ]
+   },
+   "src": "experiments/sim2real_unified/pen_shapes.json (PREREG_PEN_SHAPES)",
+   "status": "sim; hardware pending"
+  },
+  {
+   "task": "pen",
+   "shape": "star",
+   "board": "B16r4",
+   "tilt": 16.46,
+   "board_label": "board B16 (re-placed)",
+   "source": "sim",
+   "ipcr": {
+    "shift_mm": {
+     "mean": 0.649,
+     "min": 0.635,
+     "max": 0.663,
+     "n": 2
+    }
+   },
+   "np": {
+    "shift_mm": {
+     "mean": 21.782,
+     "min": 21.774,
+     "max": 21.79,
+     "n": 2
+    },
+    "pred_ratio": [
+     1.01,
+     1.01
+    ]
+   },
+   "src": "experiments/sim2real_unified/pen_shapes.json (PREREG_PEN_SHAPES)",
+   "status": "sim; hardware pending"
+  },
+  {
+   "task": "pen",
+   "shape": "star",
+   "board": "B16",
+   "tilt": 16.87,
+   "board_label": "board B16",
+   "source": "sim",
+   "ipcr": {
+    "shift_mm": {
+     "mean": 0.366,
+     "min": 0.189,
+     "max": 0.543,
+     "n": 2
+    }
+   },
+   "np": {
+    "shift_mm": {
+     "mean": 25.339,
+     "min": 25.305,
+     "max": 25.373,
+     "n": 2
+    },
+    "pred_ratio": [
+     1.005,
+     1.007
+    ]
+   },
+   "src": "experiments/sim2real_unified/pen_shapes.json (PREREG_PEN_SHAPES)",
+   "status": "sim; hardware pending"
+  }
+ ],
+ "absorption": {
+  "board": "B16r5",
+  "tilt": 17.39,
+  "normal_leak_mm": 2.98,
+  "normal_pred_mm": 2.988,
+  "ratio": 0.997,
+  "angle_deg": 0.1,
+  "ipcr_leak_mm": 0.018,
+  "ink": {
+   "I": {
+    "shift_mm": [
+     -0.259,
+     -0.317
+    ],
+    "shift_abs_mm": 0.409,
+    "pred_shift_abs_mm": 0.0,
+    "coverage": 0.898,
+    "shape_rms_mm": 1.182
+   },
+   "N": {
+    "shift_mm": [
+     24.186,
+     -2.049
+    ],
+    "shift_abs_mm": 24.273,
+    "pred_shift_abs_mm": 24.2,
+    "coverage": 0.758,
+    "shape_rms_mm": 2.418
+   }
+  },
+  "src": "experiments/sim2real_unified/hw/hb_B16r5/summary.json (PREREG_HWABL / HWSET1)"
+ },
+ "box": [
+  {
+   "task": "box",
+   "box": "S",
+   "obstacle": "tilted wall",
+   "status": "pending (controller freeze, then sim and robot)"
+  },
+  {
+   "task": "box",
+   "box": "S",
+   "obstacle": "mid-path obstacle",
+   "status": "pending (controller freeze, then sim and robot)"
+  },
+  {
+   "task": "box",
+   "box": "M",
+   "obstacle": "tilted wall",
+   "status": "pending (controller freeze, then sim and robot)"
+  },
+  {
+   "task": "box",
+   "box": "M",
+   "obstacle": "mid-path obstacle",
+   "status": "pending (controller freeze, then sim and robot)"
+  },
+  {
+   "task": "box",
+   "box": "L",
+   "obstacle": "tilted wall",
+   "status": "pending (controller freeze, then sim and robot)"
+  },
+  {
+   "task": "box",
+   "box": "L",
+   "obstacle": "mid-path obstacle",
+   "status": "pending (controller freeze, then sim and robot)"
+  }
+ ]
+}

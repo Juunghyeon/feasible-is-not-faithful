@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Feasible Is Not Faithful</title>
+<meta name="description" content="Intent-Preserving Constraint Realization for contact tasks on unknown surfaces: the task, not the controller, decides which coordinates a correction may move.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<link rel="stylesheet" href="assets/css/site.css">
+<link rel="stylesheet" href="assets/css/ipcr.css">
+</head>
+<body>
+
+<aside class="toc" aria-label="contents"><div class="toc-in">
+  <div class="toc-t">Contents</div>
+  <a href="#top">Overview</a><a href="#video">Video</a><a href="#problem">Problem</a><a href="#method">Method</a>
+  <a href="#results">Results</a><a class="sub" href="#r-draw">(A) Drawing</a><a class="sub" href="#r-abs">(B) Absorption</a><a class="sub" href="#r-box">(C) Transport</a><a class="sub" href="#r-pred">(D) Prediction</a>
+  <a href="#hardware">Hardware</a><a href="#limits">Limitations</a>
+</div></aside>
+<div class="bar"><div class="wrap">
+  <span class="name">Feasible Is Not <em>Faithful</em></span><span class="who">J. Kim, S. Park</span>
+  <nav><a href="#video">Video</a><a href="#problem">Problem</a><a href="#method">Method</a><a href="#results">Results</a><a href="#hardware">Hardware</a></nav>
+</div></div>
+<main>
+<div class="herovid" id="top"><video autoplay muted loop playsinline poster="assets/media/hero_pen.jpg" src="assets/media/hero_pen.mp4"></video>
+  <span class="herovid-cap">real robot · board tilted 16.5° · rendered from logged joint angles</span></div>
+<header class="hero wrap">
+  <h1>Feasible Is Not <em>Faithful</em></h1>
+  <p class="sub">Intent-Preserving Constraint Realization for Contact Tasks on Unknown Surfaces</p>
+  <p class="authors"><span>Jeonghyeon Kim</span><span>Shinsuk Park</span></p>
+  <p class="aff">School of Mechanical Engineering, Korea University</p>
+  <div class="btns">
+    <a class="btn off" href="#">Paper (after submission)</a>
+    <a class="btn" href="#video">Video</a>
+    <a class="btn off" href="#">Registrations (soon)</a>
+    <a class="btn off" href="#">Code (after review)</a>
+  </div>
+
+  <div class="strip">
+    <div class="row np">
+      <header><b>Nearest point</b><span>given the board's true normal · keeps contact, moves the figure</span></header>
+      <div class="frames">
+        <figure><img src="assets/img/strip_np_touch.jpg" alt="nearest point, first touch"><figcaption>touch</figcaption></figure><span class="arrow">→</span>
+        <figure><img src="assets/img/strip_np_mid.jpg" alt="nearest point, first pass done"><figcaption>first pass</figcaption></figure><span class="arrow">→</span>
+        <figure><img src="assets/img/strip_np_end.jpg" alt="nearest point, end"><figcaption>end</figcaption>
+          <span class="verdict"><i>✕</i><span data-m="strip-np">moved — mm</span></span></figure>
+      </div>
+    </div>
+    <p class="between">same board, same reference circle, same robot; only the realization rule differs</p>
+    <div class="row ipcr">
+      <header><b>IPCR (ours)</b><span>no normal, no force sensor · keeps contact and the figure</span></header>
+      <div class="frames">
+        <figure><img src="assets/img/strip_ipcr_touch.jpg" alt="IPCR, first touch"><figcaption>touch</figcaption></figure><span class="arrow">→</span>
+        <figure><img src="assets/img/strip_ipcr_mid.jpg" alt="IPCR, first pass done"><figcaption>first pass</figcaption></figure><span class="arrow">→</span>
+        <figure><img src="assets/img/strip_ipcr_end.jpg" alt="IPCR, end"><figcaption>end</figcaption>
+          <span class="verdict"><i>✓</i><span data-m="strip-ipcr">moved — mm</span></span></figure>
+      </div>
+    </div>
+    <p class="cap center">Real robot, board tilted 16.5°, unknown to the controller. Scenes are rendered from the logged joint angles; the ink is where the pen tip was on the measured board.</p>
+  </div>
+
+  <p class="tldr"><span class="tag">TL;DR</span>When a robot meets a surface it did not expect, restoring contact is easy. <span class="hl hl-np">The nearest point</span> gives away coordinates the task meant to keep. IPCR lets the task decide: <span class="hl hl-t">correct the target only inside its yield subspace</span> and <span class="hl hl-e">absorb what the estimate misses there too</span>.</p>
+  <div class="bignums">
+    <div><b data-m="big-ratio">—</b><span>less figure shift than the nearest point given the true normal (real robot)</span></div>
+    <div><b data-m="big-pred">—</b><span>of the predicted drift, measured on the real robot before any fitting</span></div>
+    <div><b data-m="big-leak">—</b><span>leak of the prior-system structure under a 10 mm offset, vs 0.02 mm for IPCR</span></div>
+    <div><b>0</b><span>force/torque sensors: joint sensing only</span></div>
+  </div>
+</header>
+
+<section class="abstract wrap">
+  <h2>Abstract</h2>
+  <p>When a contact surface differs from the one assumed, the way a controller restores feasibility decides which parts of the task survive. The common choice, the nearest feasible point with compliance along the normal, keeps contact and regulates force yet shifts a drawn figure and pushes a carried box off its path. Intent-preserving constraint realization (IPCR) lets the task decide through a yield subspace \(\mathcal{D}\) and preserved coordinates \(Lx\) with \(LD=0\); the nearest-point rule is the case \(\mathcal{D}=\operatorname{span}(n)\). A correction outside \(\mathcal{D}\) drifts by a principal-angle amount, and a residual \(\rho\) left to the servo reaches \(Lx\) through \(G(\hat N)=-L\hat N(A\hat N)^{-1}\). One controller, from joint sensing alone, re-anchors its surface belief at contact to reduce \(\rho\) and absorbs inside \(\ker L\). On a physical arm drawing on tilted boards, the figure moved 0.38–0.49 mm under IPCR against 11.3–25.2 mm under the nearest-point rule given the measured normal, 0.98–1.01 of the predicted drift, and a task-aware target with normal absorption, the structure of prior drawing systems, leaked 2.98 mm under a 10 mm surface offset, 1.00 of prediction, against 0.02 mm. In simulation, structures from the literature given the true normal and an ideal force sensor moved the figure 10–23 times more than IPCR, drift on new boards was predicted before the runs to within 6.3 %, and changing only the task switched a carried box between sideways yield and turning. Yielding along \(\mathcal{D}\) adds a depth-rate demand that our implementation meets only at low speed, and contact-force peaks above 30 N persisted.</p>
+</section>
+
+<section id="video" class="wrap" style="--bar:#2f8f6f">
+  <h2>Video</h2>
+  <div class="media pending"><div><b>Main film</b>problem → the two levels → drawing → transport → real robot<br><span class="small">after the final runs</span></div></div>
+  <div class="grid2" style="margin-top:18px">
+    <div><div class="media"><video controls muted playsinline preload="metadata" poster="assets/media/pen_compare_B16r4.jpg" src="assets/media/pen_compare_B16r4.mp4"></video></div>
+      <p class="cap">Drawing, real robot (board 16.5°): nearest point given the true normal vs IPCR, both passes at ×10. Rendered from the logged joint angles. <button class="b3d" data-scene="assets/data/scenes/pen_B16r4_hw.json">Inspect in 3D</button></p></div>
+    <div><div class="media pending"><div><b>Carrying a box past an unknown wall</b>U-fixed · U-yaw · nearest point<br><span class="small">after the final runs</span></div></div>
+      <p class="cap">Same controller, only the task changes: yield sideways or turn.</p></div>
+  </div>
+</section>
+
+<section id="problem" class="band"><div class="wrap" style="--bar:var(--np)">
+  <h2>Problem</h2>
+  <div class="grid2">
+    <div class="text">
+      <p>Robot references come from nominal geometry, and the real surface differs. On contact the reference is infeasible and the controller must move it. Many directions restore contact and regulate force equally well, and they do not give the same result.</p>
+      <p>The usual answer, the <b style="color:var(--np)">nearest point</b>, moves the reference along the surface normal. On a tilted board that slides the figure the task meant to keep in place, by \(|h|\sin\theta\), even with the exact normal. Tracking and force errors stay small, because they are measured against the corrected point. <b>A contact report does not show it.</b></p>
+    </div>
+    <div class="card widget" id="w-target">
+      <svg viewBox="0 0 420 290" aria-label="target-level geometry"></svg>
+      <div class="ctl"><span>board tilt θ</span><input type="range" name="theta" min="0" max="35" step="0.1" value="16.5"><output></output>
+        <span>depth e</span><input type="range" name="depth" min="5" max="40" step="1" value="30"><output></output></div>
+      <div class="wout"></div>
+    </div>
+  </div>
+</div></section>
+
+<section id="method" class="wrap" style="--bar:#4a78b0">
+  <h2>Method</h2>
+  <p class="text">The task names a <b>yield subspace</b> \(\mathcal{D}\), the directions in which motion may depart from the reference, and <b>preserved coordinates</b> \(y = Lx\) with \(LD = 0\). IPCR enforces this at two levels, inside one controller that uses joint sensing only.</p>
+  <div class="flow">
+    <div class="stage a"><div class="lab"><span class="hl hl-t">(A) TARGET LEVEL</span></div><h4>Correct only inside \(\mathcal{D}\)</h4>
+      <p>The unique feasible point that keeps \(Lx\):</p><div class="eq">\(x_D^\star = r + D(\hat A D)^{-1}(\hat b - \hat A r)\)</div>
+      <p>Any other correction drifts by a principal-angle amount; the nearest point is the case \(\mathcal{D}=\operatorname{span}(n)\).</p></div>
+    <div class="to">→</div>
+    <div class="stage b"><div class="lab"><span class="hl hl-e">(B) EXECUTION LEVEL</span></div><h4>Absorb the residual inside \(\ker L\)</h4>
+      <p>What the estimate misses reaches \(Lx\) by a computable law:</p><div class="eq">\(\Delta(Lx) = G(\hat N)\rho,\; G(\hat N) = -L\hat N(A\hat N)^{-1}\)</div>
+      <p>It vanishes for every residual iff the absorption direction lies in \(\ker L\).</p></div>
+    <div class="to">→</div>
+    <div class="stage c"><div class="lab">(C) ONE CONTROLLER</div><h4>Joint sensing only</h4>
+      <p>Re-anchors its surface belief at contact to shrink \(\rho\), and absorbs along \(\mathcal{D}\), separate from the force direction.</p>
+      <span class="pill">no F/T sensor</span><span class="pill">no surface model</span><span class="pill">no probing phase</span></div>
+  </div>
+  <div class="ipcr embed" data-ipcr-assets="assets/">
+  <div class="ipcr-two" style="margin-top:22px">
+    <div class="ipcr-card" data-ipcr-widget="exec">
+      <p class="kicker">Execution level · try it</p>
+      <h3 style="margin-top:0">Where does the servo absorb what the estimate missed?</h3>
+      <svg></svg>
+      <div class="ipcr-ctl">
+        <span>absorption mix α</span><input type="range" name="alpha" min="0" max="1" step="0.01" value="1"><span class="v v-alpha"></span>
+        <span>residual ρ</span><input type="range" name="rho" min="0" max="20" step="1" value="10"><span class="v v-rho"></span>
+      </div>
+      <div class="ipcr-w-out"></div>
+    </div>
+    <figure class="ipcr-fig" style="margin:0">
+      <img src="assets/ipcr/img/fig02_concept.png" alt="IPCR at two levels: target and execution" loading="lazy">
+      <figcaption>Figure from the paper. (a) Target level: the nearest point drifts by |h| sin θ; the IPCR target corrects only along d. (b, c) Execution level: absorbing the residual along d keeps the preserved coordinates; along the estimated normal the same target leaks. (d) Compliance sets the absorption direction.</figcaption>
+    </figure>
+  </div>
+  </div>
+</section>
+
+<section id="results" class="band"><div class="wrap" style="--bar:#c0558a">
+  <h2>Results</h2>
+  <h3 id="r-draw"><span class="k">(A)</span>Drawing on unknown tilted boards</h3>
+  <p class="text mute">Pick a shape and a board. Hardware cells show the real robot; the others are simulated on the same measured boards. Numbers are the mean shift of the drawn figure in the kept coordinates.</p>
+  <div id="pen-gallery"></div>
+  <div class="ipcr embed" data-ipcr-assets="assets/">
+  <h4 class="sub">In simulation: same speed, same coverage, different placement</h4>
+  <p class="text">IPCR against the nearest point given the true normal, at 5 mm/s through both strokes on four boards (Gazebo and ROS 2 with a plant identified on the physical CR3A). Both arms kept contact on 98–100 % of the figure, with no missing arc over 10°. Every registered criterion passed.</p>
+  <div id="ipcr-chart-silent" class="ipcr-card"></div>
+  <p class="ipcr-cap"><span style="color:var(--ipcr)">●</span> IPCR &nbsp; <span style="color:var(--np)">■</span> nearest point with the true normal. Per-run shifts were 0.23–0.94 mm and 10.5–18.2 mm, so averaging did not hide opposing errors. IPCR's shape error was also the smaller (0.9–1.1 mm vs 1.0–2.4 mm).</p>
+  <h4 class="sub">Against execution structures from the literature</h4>
+  <p class="text">Each rival runs on the same stack and pen with its most favorable sensing. IPCR has neither the true normal nor a force sensor.</p>
+  <div id="ipcr-chart-compare" class="ipcr-card"></div>
+  <p class="ipcr-cap">The two marks per row are the 8.5° and 15.6° boards (10 mm/s, 5 runs per cell). Motion-stiff compliance follows Shi et al. (2026) and ran in a later registered set; IPCR rerun on that set moved the figure 0.76 and 0.98 mm. On the role-reversal test, a task defined <i>on</i> the surface, the nearest point was the faithful rule (0.72–1.43 mm) and IPCR with a depth yield was not (10.6–39.1 mm): the right rule is whichever matches the task's yield subspace.</p>
+  <h4 class="sub">Curved boards and a biased normal</h4>
+  <p class="text">Theorem 1 needs no planarity. With only a planar normal estimate, IPCR kept place and size on spheres of radius 150 and 250 mm and cylinders of 250 mm: shift 0.44–0.68 mm, scale 1.000–1.009. The nearest point given the true <i>local</i> normal moved the figure 15.5–21.9 mm on the spheres and the vertical cylinder. Rotating the normal estimate by ±3° moved the nearest-point figure by 8.2 mm and IPCR's by 0.27 mm, since IPCR's target does not use the normal for the preserved coordinates.</p>
+  </div>
+
+  <h3 id="r-abs"><span class="k">(B)</span>Is a task-aware target enough? No.</h3>
+  <div class="grid3" id="absorption"></div>
+  <div class="ipcr embed" data-ipcr-assets="assets/">
+  <p class="text">In simulation we crossed the target rule with the absorption direction, all with the true normal, and injected a residual by offsetting the believed plane by 10 mm. A task-aware target with normal absorption is the structure of the closest drawing systems. It matched IPCR when no residual was injected (0.28–0.69 mm), and leaked as predicted once one was:</p>
+  <div class="ipcr-two">
+  <div>
+  <div class="ipcr-grid2" aria-label="Leak under a 10 mm believed-plane offset, 15.6 degree board">
+    <div></div><div class="h">target along n<br>(nearest point)</div><div class="h">target along d<br>(task-aware)</div>
+    <div class="h">absorb<br>along d</div>
+    <div class="ipcr-cell bad"><div class="v">2.65</div><div class="p">predicted 2.69</div></div>
+    <div class="ipcr-cell good"><div class="v">0.35</div><div class="p">predicted 0 · IPCR</div></div>
+    <div class="h">absorb<br>along n</div>
+    <div class="ipcr-cell np"><div class="v">0.52</div><div class="p">predicted 0</div></div>
+    <div class="ipcr-cell bad"><div class="v">2.65</div><div class="p">predicted 2.69</div><div class="w">≈ closest prior drawing systems</div></div>
+  </div>
+  <p class="ipcr-cap">Leak of the figure (mm) under a 10 mm believed-plane offset, 15.6° board, mean of 4 runs (Table III of the paper, hold on). Across offsets of 2–20 mm the normal-absorption leak grew with slope 0.93 and 0.87 against the prediction, while IPCR's stayed at or below 0.65 mm.</p>
+  </div>
+  <figure class="ipcr-fig" style="margin:0">
+    <img src="assets/ipcr/img/fig13_leak_robot.png" alt="Leakage law: measured vs predicted change of the preserved coordinates" loading="lazy">
+    <figcaption>The leakage law, measured: 72 registered runs on 3 walls under a ±15 mm residual. The change of the preserved coordinates follows G(N̂)ρ with slope 0.93 (r = 0.93), and falls from 3.0–4.3 mm with absorption along the normal (α = 1) to 0.12–0.69 mm along the yield direction (α = 0).</figcaption>
+  </figure>
+  </div>
+  </div>
+
+  <h3 id="r-box"><span class="k">(C)</span>Same controller, different task: carrying a box</h3>
+  <div class="ipcr embed" data-ipcr-assets="assets/">
+  <div class="ipcr-replay" data-cfg="box">
+    <div class="ipcr-stage">
+      <canvas class="ipcr-gl"></canvas>
+      <div class="ipcr-panels n3">
+        <div class="ipcr-panel" data-run="NP" data-color="np"><div class="ipcr-view"></div>
+          <div class="ipcr-ptitle" style="color:var(--np)">Nearest point<small>given the true normal</small></div><div class="ipcr-readout"></div><canvas class="ipcr-inset"></canvas></div>
+        <div class="ipcr-panel" data-run="IPCR" data-color="ipcr"><div class="ipcr-view"></div>
+          <div class="ipcr-ptitle" style="color:var(--ipcr)">IPCR, task “keep yaw”<small>yields sideways only</small></div><div class="ipcr-readout"></div><canvas class="ipcr-inset"></canvas></div>
+        <div class="ipcr-panel" data-run="YAW" data-color="yaw"><div class="ipcr-view"></div>
+          <div class="ipcr-ptitle" style="color:var(--yaw)">IPCR, task “yaw free”<small>same controller, turns instead</small></div><div class="ipcr-readout"></div><canvas class="ipcr-inset"></canvas></div>
+      </div>
+      <div class="ipcr-loading">loading replay…</div>
+    </div>
+    <div class="ipcr-bar">
+      <button class="ipcr-play">Pause</button><span class="ipcr-phase"></span><input class="ipcr-time" type="range" aria-label="time"><span class="ipcr-clock"></span>
+      <button class="ipcr-speed" data-speed="4">4×</button><button class="ipcr-speed on" data-speed="8">8×</button><button class="ipcr-speed" data-speed="16">16×</button>
+      <button class="ipcr-reset">Reset view</button>
+    </div>
+  </div>
+  <p class="ipcr-cap">Replay of three logged simulation runs, rendered in your browser from the logged joint angles: an unmodeled 250×200×150 mm, 1.5 kg box is carried 200 mm along a straight path, and a board tilted 20° intrudes 20 mm into it. The only difference between the two IPCR runs is the task specification; the readouts are computed from each run's log, and the coloured line on the table is the path of the box centre. Drag to orbit.</p>
+  <p class="text">Over 108 simulated runs (boards at 8.5°, 20° and 30°, friction 0 and 0.3, payloads 0.5–2.5 kg), the task “keep yaw” kept yaw within 1° in 54/54 runs and yielded a median 20.0 mm, the geometric requirement; “yaw free” turned in 54/54 runs (median −8.9°) and yielded less in 18/18 conditions. Against the nearest point with the true normal, IPCR's progress error stayed at its free-motion level (2.7–3.1 mm), while the nearest point added the amount predicted from geometry alone:</p>
+  <div id="ipcr-chart-transport" class="ipcr-card" style="max-width:460px;margin:0 auto"></div>
+  <p class="ipcr-cap" style="text-align:center">The 8.5° magnitude missed its registered criterion; at that tilt the metric is dominated by free-motion tracking.</p>
+  </div>
+  <h4 class="sub">More boxes and obstacles (pending)</h4>
+  <p class="text mute">Box shapes × unknown obstacles. U-fixed keeps yaw and yields sideways, U-yaw turns, the nearest point is pushed back along its path. Final runs after the controller freeze.</p>
+  <div class="boxgrid" id="box-gallery"></div>
+
+  <h3 id="r-pred"><span class="k">(D)</span>Predicted before the runs</h3>
+  <div class="card chart" id="pred-chart"></div>
+  <p class="cap">Nearest point: measured shift vs the shift predicted from the board pose and the reference alone (\(|h|\sin\theta\) per tick), per hardware board. IPCR is predicted to stay at 0.</p>
+</div></section>
+
+<section id="hardware" class="wrap" style="--bar:#4a78b0">
+  <h2>Hardware</h2>
+  <p class="text">Dobot CR3A, spring-loaded pen 105 mm from the flange, 5 mm/s. Each board was placed at a pose unknown to the controller; its plane was measured afterwards from the pen-tip contacts and used only for evaluation and as the nearest point's normal.</p>
+  <div class="hwgrid">
+    <div class="card"><table id="hw-table"><thead><tr><th>board</th><th>tilt</th><th>IPCR</th><th>nearest point</th><th>NP / pred.</th></tr></thead><tbody></tbody></table>
+      <p class="cap">Three runs per arm and board, GAP 1 mm (hw_eval.py).</p></div>
+    <div class="grid2" style="gap:10px">
+      <figure style="margin:0"><img src="assets/img/ink_ipcr.jpg" alt="ink, IPCR" style="border-radius:10px"><figcaption class="cap">Ink, IPCR (board 17.4°)</figcaption></figure>
+      <figure style="margin:0"><img src="assets/img/ink_np.jpg" alt="ink, nearest point" style="border-radius:10px"><figcaption class="cap">Ink, nearest point (board 17.4°; the short stroke is the approach)</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="limits"><div class="wrap" style="--bar:var(--faint)">
+  <h2>Limitations</h2>
+  <ul class="text limits">
+    <li><b>Speed costs coverage.</b> Keeping the frontal motion exact needs a depth rate of up to \(v\tan\theta\); our implementation meets it only at low speed.</li>
+    <li><b>Force is regulated, not bounded.</b> Contact-force peaks above 30 N persisted, and IPCR's were not lower than the nearest point's.</li>
+    <li><b>Friction.</b> In simulation, board friction of 0.45 and above jammed every arm and every shape.</li>
+    <li><b>Absorption matters only when a residual persists.</b> Residuals arising on their own were small on our boards; the difference between absorption directions was shown under injected offsets.</li>
+    <li><b>Scope.</b> The guarantee covers the task-selected coordinates and presumes a correctly specified \((\mathcal{D}, L)\). A curved surface's local attitude is not tracked. On hardware we have so far run the pen task (circle on three boards and the absorption test); other shapes and box transport on hardware are pending.</li>
+  </ul>
+  <h2 style="margin-top:34px">Citation</h2>
+  <pre class="bib">@unpublished{kim2026ipcr,
+  title  = {Feasible Is Not Faithful: Intent-Preserving Constraint
+            Realization for Contact Tasks on Unknown Surfaces},
+  author = {Kim, Jeonghyeon and Park, Shinsuk},
+  note   = {Manuscript in preparation},
+  year   = {2026}
+}</pre>
+</div></section>
+
+</main>
+<footer>Feasible Is Not Faithful · Korea University · every number on this page is read from the result files listed in <code>assets/data/manifest.json</code></footer>
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false}]})"></script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<script type="module">
+import { openViewer } from './assets/js/viewer3d.js';
+document.addEventListener('click', e => { const b = e.target.closest('.b3d'); if (b) openViewer(b.dataset.scene); });
+</script>
+<script src="assets/js/site.js"></script>
+<script type="module" src="assets/ipcr/replay.js"></script>
+<script src="assets/ipcr/widgets.js"></script>
+</body>
+</html>

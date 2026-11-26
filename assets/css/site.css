@@ -154,3 +154,10 @@ sup.c { font-size: .68em; line-height: 0; margin-left: 1px; white-space: nowrap;
 details.more { margin-top: 26px; } details.more .thm { margin: 14px 0; }
 @media (max-width: 900px) { .steps, .tryrow { grid-template-columns: 1fr; } .stats { gap: 28px; } }
 @media (max-width: 640px) { .head { padding: 40px 18px 18px; } .stats dt { font-size: .78rem; } }
+
+/* back link */
+.back { display: inline-flex; align-items: center; gap: 6px; color: var(--mute); text-decoration: none; font-size: .9rem; font-weight: 600; padding: 5px 12px 5px 9px; border: 1px solid var(--line); border-radius: 999px; white-space: nowrap; }
+.back:hover { color: var(--ink); border-color: var(--faint); } .bar .wrap { gap: 16px; }
+@media (max-width: 640px) { .back { font-size: .82rem; padding: 4px 10px 4px 8px; } }
+/* wider teaser film */
+.teaser { max-width: 1200px; }

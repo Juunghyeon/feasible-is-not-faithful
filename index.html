@@ -18,6 +18,7 @@
 <body>
 <a class="skip" href="#drawing">Skip to the results</a>
 <header class="bar"><div class="wrap">
+  <a class="back" href="https://juunghyeon.github.io/projects/" aria-label="Back to all projects"><span aria-hidden="true">←</span> Projects</a>
   <a class="mark" href="#top"><svg viewBox="0 0 32 32" aria-hidden="true"><circle class="m-i" cx="13" cy="15" r="9"/><circle class="m-n" cx="19" cy="17" r="9"/></svg>Feasible Is Not Faithful</a>
   <nav aria-label="Sections"><a href="#overview">Overview</a><a href="#method">Method</a><a href="#drawing">Robot</a><a href="#simulation">Simulation</a><a href="#related">Related work</a><a href="#limits">Limitations</a><a href="#references">References</a></nav>
 </div></header>
@@ -34,12 +35,12 @@
 
 <!-- 2 teaser: the rendered concept film -->
 <section class="teaser wrap" aria-label="Concept film">
-  <figure class="film"><div class="fbox"><video id="mech" muted loop playsinline preload="metadata" aria-label="Rendered from two robot runs: the same dashed planned circle drawn side by side; the nearest point, correcting along the board's normal, lands off the plan; IPCR, yielding only in depth, lands on it"></video><button class="vbtn" type="button" aria-pressed="false">Pause</button></div></figure>
+  <figure class="film"><div class="fbox"><video id="mech" muted loop playsinline preload="metadata" aria-label="Schematic film: a planned circle lies behind a tilted, unknown board; moving it onto the board along the task's depth keeps its place in the task's frontal plane, moving it along the board's normal shifts it; in common contact controllers the surface or the sensed force picks the direction, in IPCR the task does"></video><button class="vbtn" type="button" aria-pressed="false">Pause</button></div></figure>
   <dl class="duel stats">
     <div class="i"><dt>IPCR, along the task's depth</dt><dd><span data-n="hero.ipcr" data-d="2"></span> <small>mm</small></dd></div>
     <div class="n"><dt>nearest point, along the normal</dt><dd><span data-n="hero.np" data-d="1"></span> <small>mm</small></dd></div>
   </dl>
-  <p class="fine">Shift of the drawn circle from its planned place in two robot runs on the same board, recorded one after the other. The film is rendered from their logged joint angles and pen-tip paths, shown side by side and sped up; the robot videos are <a href="#drawing">below</a>.</p>
+  <p class="fine">Numbers: shift of the drawn circle from its planned place in two robot runs on the same board. The film above is a schematic with the angle exaggerated; the robot videos are <a href="#drawing">below</a>.</p>
 </section>
 
 <!-- 3 overview -->

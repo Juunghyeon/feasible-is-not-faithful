@@ -4,7 +4,10 @@
   "experiments/sim2real_unified/hw/u41m_hw.json",
   "experiments/sim2real_unified/hw/u41m_hw_traces.npz",
   "experiments/sim2real_unified/hw/board_B8w.json",
-  "sim2real/docs/HW_U41M_RESULTS_2026-11-25_claude.md (box table)"
+  "sim2real/docs/HW_U41M_RESULTS_2026-11-25_claude.md (box table)",
+  "experiments/sim2real_unified/u41m_confirmatory.json",
+  "experiments/sim2real_unified/hyb_confirmatory.json",
+  "experiments/sim2real_unified/fpro_confirmatory.json"
  ],
  "summary": {
   "n_runs": 20,
@@ -14377,5 +14380,324 @@
     "HW_u41_cN_B8w_2_I_d5_20261125_172404"
    ]
   }
+ },
+ "sim": {
+  "boards": [
+   "8.5\u00b0",
+   "15.6\u00b0",
+   "23.2\u00b0",
+   "15.6\u00b0, \u03bc 0.6"
+  ],
+  "arms": {
+   "I": [
+    {
+     "board": "cf8",
+     "label": "8.5\u00b0",
+     "shift": 0.257,
+     "pred": 0.0,
+     "n": 5
+    },
+    {
+     "board": "cf16",
+     "label": "15.6\u00b0",
+     "shift": 0.25,
+     "pred": 0.0,
+     "n": 5
+    },
+    {
+     "board": "cf24d40",
+     "label": "23.2\u00b0",
+     "shift": 0.324,
+     "pred": 0.0,
+     "n": 5
+    },
+    {
+     "board": "cf16_mu0.6",
+     "label": "15.6\u00b0, \u03bc 0.6",
+     "shift": 0.339,
+     "pred": 0.0,
+     "n": 5
+    }
+   ],
+   "Q1": [
+    {
+     "board": "cf8",
+     "label": "8.5\u00b0",
+     "shift": 2.769,
+     "pred": 2.896,
+     "n": 5
+    },
+    {
+     "board": "cf16",
+     "label": "15.6\u00b0",
+     "shift": 2.861,
+     "pred": 3.137,
+     "n": 5
+    },
+    {
+     "board": "cf24d40",
+     "label": "23.2\u00b0",
+     "shift": 4.237,
+     "pred": 4.278,
+     "n": 5
+    },
+    {
+     "board": "cf16_mu0.6",
+     "label": "15.6\u00b0, \u03bc 0.6",
+     "shift": 3.327,
+     "pred": 3.533,
+     "n": 5
+    }
+   ],
+   "Q2": [
+    {
+     "board": "cf8",
+     "label": "8.5\u00b0",
+     "shift": 5.489,
+     "pred": 5.755,
+     "n": 5
+    },
+    {
+     "board": "cf16",
+     "label": "15.6\u00b0",
+     "shift": 5.718,
+     "pred": 6.284,
+     "n": 5
+    },
+    {
+     "board": "cf24d40",
+     "label": "23.2\u00b0",
+     "shift": 7.584,
+     "pred": 8.043,
+     "n": 5
+    },
+    {
+     "board": "cf16_mu0.6",
+     "label": "15.6\u00b0, \u03bc 0.6",
+     "shift": 6.608,
+     "pred": 7.039,
+     "n": 5
+    }
+   ],
+   "M": [
+    {
+     "board": "cf8",
+     "label": "8.5\u00b0",
+     "shift": 4.119,
+     "pred": 4.336,
+     "n": 5
+    },
+    {
+     "board": "cf16",
+     "label": "15.6\u00b0",
+     "shift": 4.28,
+     "pred": 4.8,
+     "n": 5
+    },
+    {
+     "board": "cf24d40",
+     "label": "23.2\u00b0",
+     "shift": 5.449,
+     "pred": 5.941,
+     "n": 5
+    },
+    {
+     "board": "cf16_mu0.6",
+     "label": "15.6\u00b0, \u03bc 0.6",
+     "shift": 5.008,
+     "pred": 5.46,
+     "n": 5
+    }
+   ],
+   "S": [
+    {
+     "board": "cf8",
+     "label": "8.5\u00b0",
+     "shift": 8.442,
+     "pred": 8.838,
+     "n": 5
+    },
+    {
+     "board": "cf16",
+     "label": "15.6\u00b0",
+     "shift": 8.123,
+     "pred": 9.029,
+     "n": 5
+    },
+    {
+     "board": "cf24d40",
+     "label": "23.2\u00b0",
+     "shift": 10.493,
+     "pred": 11.479,
+     "n": 5
+    },
+    {
+     "board": "cf16_mu0.6",
+     "label": "15.6\u00b0, \u03bc 0.6",
+     "shift": 9.602,
+     "pred": 10.29,
+     "n": 5
+    }
+   ],
+   "F": [
+    {
+     "board": "cf8",
+     "label": "8.5\u00b0",
+     "shift": 8.361,
+     "pred": 8.767,
+     "n": 5
+    },
+    {
+     "board": "cf16",
+     "label": "15.6\u00b0",
+     "shift": 8.234,
+     "pred": 9.117,
+     "n": 5
+    },
+    {
+     "board": "cf24d40",
+     "label": "23.2\u00b0",
+     "shift": 10.794,
+     "pred": 11.731,
+     "n": 5
+    },
+    {
+     "board": "cf16_mu0.6",
+     "label": "15.6\u00b0, \u03bc 0.6",
+     "shift": 12.044,
+     "pred": 11.14,
+     "n": 5
+    }
+   ],
+   "N": [
+    {
+     "board": "cf8",
+     "label": "8.5\u00b0",
+     "shift": 8.099,
+     "pred": 8.533,
+     "n": 5
+    },
+    {
+     "board": "cf16",
+     "label": "15.6\u00b0",
+     "shift": 8.423,
+     "pred": 9.282,
+     "n": 5
+    },
+    {
+     "board": "cf24d40",
+     "label": "23.2\u00b0",
+     "shift": 10.756,
+     "pred": 11.7,
+     "n": 5
+    },
+    {
+     "board": "cf16_mu0.6",
+     "label": "15.6\u00b0, \u03bc 0.6",
+     "shift": 9.91,
+     "pred": 10.551,
+     "n": 5
+    }
+   ],
+   "H": [
+    {
+     "board": "cf8",
+     "label": "8.5\u00b0",
+     "shift": 0.021,
+     "pred": 0.0,
+     "n": 5,
+     "variant": "C"
+    },
+    {
+     "board": "cf8",
+     "label": "8.5\u00b0",
+     "shift": 0.025,
+     "pred": 0.0,
+     "n": 5,
+     "variant": "S"
+    },
+    {
+     "board": "cf16",
+     "label": "15.6\u00b0",
+     "shift": 0.033,
+     "pred": 0.0,
+     "n": 5,
+     "variant": "C"
+    },
+    {
+     "board": "cf16",
+     "label": "15.6\u00b0",
+     "shift": 0.039,
+     "pred": 0.0,
+     "n": 5,
+     "variant": "S"
+    },
+    {
+     "board": "cf24d40",
+     "label": "23.2\u00b0",
+     "shift": 0.028,
+     "pred": 0.0,
+     "n": 5,
+     "variant": "C"
+    },
+    {
+     "board": "cf24d40",
+     "label": "23.2\u00b0",
+     "shift": 0.041,
+     "pred": 0.0,
+     "n": 5,
+     "variant": "S"
+    },
+    {
+     "board": "cf16_mu0.6",
+     "label": "15.6\u00b0, \u03bc 0.6",
+     "shift": 0.04,
+     "pred": 0.0,
+     "n": 5,
+     "variant": "C"
+    },
+    {
+     "board": "cf16_mu0.6",
+     "label": "15.6\u00b0, \u03bc 0.6",
+     "shift": 0.036,
+     "pred": 0.0,
+     "n": 5,
+     "variant": "S"
+    }
+   ]
+  },
+  "ipcr": [
+   0.25,
+   0.34
+  ],
+  "rivals": [
+   2.8,
+   12.0
+  ],
+  "hyb": [
+   0.02,
+   0.04
+  ],
+  "ratio_nsf": [
+   0.9,
+   1.09
+  ],
+  "curved": {
+   "ipcr": [
+    0.27,
+    0.43
+   ],
+   "np_local": [
+    11.3,
+    15.9
+   ],
+   "n_np": 3,
+   "n_boards": 4
+  },
+  "fpro_cells": 6,
+  "fpro_total": 6,
+  "first_fail": 4,
+  "first_cells": 12,
+  "n_A": 140
  }
 }

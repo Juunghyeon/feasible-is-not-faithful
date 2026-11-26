@@ -18,21 +18,22 @@
   const hero = $('#hero-video'), hb = $('.hero-pause'), showHero = () => { hb.textContent = hero.paused ? 'Play' : 'Pause'; hb.setAttribute('aria-pressed', String(hero.paused)); };
   if (M.media.hero.video) { hero.src = M.media.hero.video; hb.onclick = () => hero.paused ? hero.play() : hero.pause(); hero.onplay = hero.onpause = showHero; if (!calm) hero.play().catch(showHero); hero.ontimeupdate = () => hero.parentElement.classList.toggle("early", hero.currentTime > 0 && hero.currentTime < .42 * hero.duration); showHero(); } else hb.hidden = true;
   const mech = $('#mech'), mm = M.media.mechanism;
-  if (mm && mm.video) { mech.poster = mm.poster; mech.src = mm.video; if (!calm && 'IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) mech.play().catch(() => {}); else mech.pause(); }), { threshold: .4 }).observe(mech); } else mech.closest('figure').hidden = true;
+  if (mm && mm.video) { mech.poster = mm.poster; mech.src = mm.video; const mb = $('.film .vbtn'); let mu = false; const ms = () => { mb.textContent = mech.paused ? 'Play' : 'Pause'; mb.setAttribute('aria-pressed', String(mech.paused)); }; mech.onplay = mech.onpause = ms; ms(); const mt = () => { if (mech.paused) { mu = false; mech.play().catch(() => {}); } else { mu = true; mech.pause(); } }; mb.onclick = mt; mech.onclick = mt; if (!calm && 'IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { if (!mu) mech.play().catch(() => {}); } else mech.pause(); }), { threshold: .4 }).observe(mech); } else mech.closest('figure').hidden = true;
 
   // ---------- two videos, one clock
   function pair(root) {
-    const [a, b] = $$('video', root), btn = $('.play', root), bar = $('input', root), spd = $('.spd', root); let want = false, raf = 0;
+    const [a, b] = $$('video', root), btn = $('.play', root), bar = $('input', root), spd = $('.spd', root); let want = false, raf = 0, user = false, vis = false;
     const paint = () => { btn.textContent = want ? 'Pause' : 'Play both'; };
     function tick() { raf = 0; if (!want) return; if (a.duration) { bar.value = a.currentTime / a.duration; if (!b.seeking && Math.abs(a.currentTime - b.currentTime) > .08) b.currentTime = Math.min(a.currentTime, (b.duration || 1e9) - .02); } raf = requestAnimationFrame(tick); }
     const ready = v => v.readyState >= 3 ? Promise.resolve() : new Promise(r => { v.addEventListener('canplay', r, { once: true }); if (v.preload === 'none') { v.preload = 'auto'; v.load(); } });
     async function play() { want = true; paint(); await Promise.all([ready(a), ready(b)]); if (!want) return; if (a.ended) a.currentTime = 0; b.currentTime = a.currentTime; await Promise.all([a.play(), b.play()]).catch(() => { want = false; paint(); }); if (!raf) tick(); }
     function pause() { want = false; a.pause(); b.pause(); paint(); }
-    btn.onclick = () => want ? pause() : play();
+    btn.onclick = () => { if (want) { user = true; pause(); } else { user = false; play(); } };
+    if (!calm && 'IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => { vis = e.isIntersecting; if (vis && !user && !btn.disabled) play(); else if (!vis && want) pause(); }), { threshold: .45 }).observe(root);   // play when in view, as a pair
     a.onended = () => { if (want) { a.currentTime = b.currentTime = 0; a.play(); b.play(); } };
     bar.oninput = async () => { await Promise.all([ready(a), ready(b)]); a.currentTime = b.currentTime = bar.value * a.duration; };
     $$('.frame', root).forEach(f => f.addEventListener('click', () => btn.click()));
-    return { set(ka, kb) { pause(); bar.value = 0; [[a, ka], [b, kb]].forEach(([v, k]) => { const m = M.media[k]; v.preload = 'none'; v.poster = m.poster; if (m.video) v.src = m.video; else v.removeAttribute('src'); }); const m = M.media[ka]; spd.textContent = `\u00d7${m.speed}`; btn.disabled = !(m.video && M.media[kb].video); }, pause };
+    return { set(ka, kb) { pause(); bar.value = 0; [[a, ka], [b, kb]].forEach(([v, k]) => { const m = M.media[k]; v.preload = 'none'; v.poster = m.poster; if (m.video) v.src = m.video; else v.removeAttribute('src'); }); const m = M.media[ka]; spd.textContent = `\u00d7${m.speed}`; btn.disabled = !(m.video && M.media[kb].video); if (vis && !user && !calm && !btn.disabled) play(); }, pause };
   }
   function tabs(root, key, fn) {
     const bs = $$('button', root), sel = root.getAttribute('role') === 'tablist' ? 'aria-selected' : 'aria-checked';
@@ -61,10 +62,31 @@
   function dots(F) {
     const s = $('#dots'); s.innerHTML = ''; const W = 560, H = 264, l = 108, r = W - 18, X = v => l + v / 18 * (r - l); s.setAttribute('viewBox', `0 0 ${W} ${H}`);
     for (let v = 0; v <= 18; v += 3) { el('path', { d: `M${X(v)} 18V${H - 46}`, class: 's-g' }, s); tx(s, X(v), H - 26, v, 'f-m', { 'text-anchor': 'middle' }); } tx(s, (l + r) / 2, H - 6, 'shift from the planned place (mm)', 'f-m', { 'text-anchor': 'middle' });
-    const row = (y, R, c, tc, lab, sub, rg, d) => { tx(s, 0, y - 1, lab, tc, { 'font-weight': 700, 'font-size': 14 }); tx(s, 0, y + 15, sub, 'f-m', { 'font-size': 11.5 }); R.forEach((o, i) => { const yy = y + (i - (R.length - 1) / 2) * 17; const e = el('circle', { cx: X(o.shift), cy: yy, r: 4.8, class: c }, s); el('title', {}, e).textContent = `${runId(o.run)}: ${o.shift.toFixed(2)} mm` + (o.pred ? `, predicted ${o.pred.toFixed(2)} mm` : ''); if (o.pred) el('path', { d: `M${X(o.pred)} ${yy - 8}v16`, class: 's-r', 'stroke-width': 2.4 }, s); });
+    const row = (y, R, c, tc, lab, sub, rg, d) => { tx(s, 0, y - 1, lab, tc, { 'font-weight': 700, 'font-size': 14 }); tx(s, 0, y + 15, sub, 'f-m', { 'font-size': 11.5 }); R.forEach((o, i) => { const yy = y + (i - (R.length - 1) / 2) * 17; const e = el('circle', { cx: X(o.shift), cy: yy, r: 4.8, class: c }, s); el('title', {}, e).textContent = `${runId(o.run)}: ${o.shift.toFixed(2)} mm` + (o.pred ? `, predicted ${o.pred.toFixed(2)} mm` : ''); if (o.pred) el('path', { d: `M${X(o.pred)} ${yy - 11}v22`, class: 's-r', 'stroke-width': 2.4 }, s); });
       const hi = Math.max(...R.map(o => o.shift)), lo = Math.min(...R.map(o => o.shift)); d > 0 ? tx(s, X(hi) + 14, y + 5, rg, tc, { 'font-weight': 700, 'font-size': 14 }) : tx(s, X(lo) - 16, y + 5, rg, tc, { 'font-weight': 700, 'font-size': 14, 'text-anchor': 'end' }); };
     row(70, F.ipcr, 'f-i', 'tx-i', 'IPCR', `${F.ipcr.length} runs`, `${range(F.ipcr_range, 2)} mm`, 1); row(164, F.np, 'f-n', 'tx-n', 'nearest point', `${F.np.length} runs`, `${range(F.np_range, 1)} mm, ${range(F.ratio_range, 2)} of predicted`, -1);
   }
+  // ---------- registered simulation: shift per structure, one dot per board (cell mean), predictions as ticks
+  function simdots() {
+    const s = $('#simdots'); if (!s || !M.sim) return; s.innerHTML = '';
+    const rows = [['H', 'fixed-axis hybrid', 'a-h'], ['I', 'IPCR', 'a-i'], ['Q1', 'soft, α = 1/3', 'a-q1'], ['Q2', 'soft, α = 2/3', 'a-q2'], ['M', 'motion-stiff', 'a-m'], ['S', 'isotropic', 'a-s'], ['F', 'force direction', 'a-f'], ['N', 'nearest point', 'a-n']];
+    const W = 760, rh = 30, top = 14, H = top + rows.length * rh + 40, l = 150, r = W - 92, lo = Math.log10(0.01), hi = Math.log10(20), X = v => l + (Math.log10(Math.max(v, 0.011)) - lo) / (hi - lo) * (r - l);
+    s.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    [0.01, 0.1, 1, 10].forEach(v => { el('path', { d: `M${X(v)} ${top - 4}V${H - 34}`, class: 's-g' }, s); tx(s, X(v), H - 16, v < 1 ? String(v) : String(v), 'f-m', { 'text-anchor': 'middle', 'font-size': 12 }); });
+    tx(s, (l + r) / 2, H - 1, 'shift of the figure (mm)', 'f-m', { 'text-anchor': 'middle', 'font-size': 12 });
+    const MK = ['circle', 'square', 'diamond', 'triangle'];
+    const mark = (k, x, y, cls) => { const z = 5; const d = { circle: null, square: `M${x - z} ${y - z}h${2 * z}v${2 * z}h${-2 * z}z`, diamond: `M${x} ${y - z - 1}l${z + 1} ${z + 1}l${-z - 1} ${z + 1}l${-z - 1} ${-z - 1}z`, triangle: `M${x} ${y - z - 1}l${z + 1} ${2 * z}h${-2 * z - 2}z` }[k];
+      return d ? el('path', { d, class: cls }, s) : el('circle', { cx: x, cy: y, r: z, class: cls }, s); };
+    rows.forEach(([k, lab, cls], i) => {
+      const y = top + i * rh + rh / 2, C = M.sim.arms[k]; if (!C) return;
+      tx(s, l - 14, y + 4, lab, 'tx ' + cls, { 'text-anchor': 'end', 'font-weight': k === 'I' || k === 'N' ? 700 : 600, 'font-size': 13.5 });
+      C.forEach((c, j) => { if (c.pred > 0) el('path', { d: `M${X(c.pred)} ${y - 9}v18`, class: 's-r', 'stroke-width': 2 }, s); });
+      C.forEach((c, j) => { const b = M.sim.boards.indexOf(c.label); const e = mark(MK[b], X(c.shift), y + (k === 'H' ? (c.variant === 'C' ? -5 : 5) : 0), 'dot ' + cls); el('title', {}, e).textContent = `${lab}, ${c.label}${c.variant ? ' (' + (c.variant === 'C' ? 'PD' : 'switch') + ')' : ''}: ${c.shift.toFixed(2)} mm` + (c.pred > 0 ? `, predicted ${c.pred.toFixed(2)} mm` : ''); });
+      const v = C.map(c => c.shift), a = Math.min(...v), b = Math.max(...v); tx(s, r + 12, y + 4, `${num(a, a < 1 ? 2 : 1)}–${num(b, b < 1 ? 2 : 1)}`, 'tx ' + cls, { 'font-size': 12.5, 'font-weight': 600 });
+    });
+    const key = $('#simkey'); if (key) key.innerHTML = M.sim.boards.map((bd, i) => `<span><svg viewBox="-7 -7 14 14" aria-hidden="true">${{ circle: '<circle r="5"/>', square: '<path d="M-5-5h10v10h-10z"/>', diamond: '<path d="M0-6l6 6-6 6-6-6z"/>', triangle: '<path d="M0-6l6 10h-12z"/>' }[MK[i]]}</svg>${bd}</span>`).join('') + '<span><svg viewBox="-7 -7 14 14" aria-hidden="true"><path d="M0-6v12" class="s-r" stroke-width="2"/></svg>predicted</span>';
+  }
+  simdots();
   const pen = pair($('#pen-pair'));
   tabs($('#fig-tabs'), 'fig', k => { const F = M.pen[k], m = M.media[k + '_ipcr']; pen.set(k + '_ipcr', k + '_np'); trace(F); dots(F);
     $('#pen-cap').textContent = `Real robot, one camera position, played \u00d7${m.speed} (${secs(m, M.media[k + '_np'])}, cropped, last frame held). The two are aligned where the stroke starts to move, to about half a second. Runs ${runId(m.run)} and ${runId(M.media[k + '_np'].run)}.`; });
@@ -86,6 +108,30 @@
       out.innerHTML = `The nearest point moves the figure by <b class="c-n">${(h * Math.sin(th)).toFixed(1)} mm</b> sideways. IPCR moves it by <b class="c-i">0 mm</b>.`;
     }
     sT.oninput = sE.oninput = draw; draw();
+  })();
+
+  // ---------- execution-level widget and the drawing table
+  (function () {
+    const root = $('#w-exec'), svg = $('svg', root), [sA, sR] = $$('input', root), o = $$('output', root), out = $('.wout', root), W = 440, th = M.summary.tilt_deg * Math.PI / 180, k = 5.2;
+    const defs = el('defs', {}, svg); for (const c of ['i', 'n']) { const m = el('marker', { id: 'ex' + c, viewBox: '0 0 10 10', refX: 8, refY: 5, markerWidth: 6, markerHeight: 6, orient: 'auto' }, defs); el('path', { d: 'M0 0L10 5L0 10z', class: 'f-' + c }, m); }
+    const g = el('g', {}, svg), n = [-Math.sin(th), Math.cos(th)], t = [Math.cos(th), Math.sin(th)], P = (u, w) => [W / 2 + u * k, 200 - w * k];
+    function draw() {
+      const al = +sA.value, rho = +sR.value; g.innerHTML = ''; o[0].textContent = al < .005 ? 'd' : al > .995 ? 'n' : al.toFixed(2); o[1].textContent = rho + ' mm';
+      const N = [al * n[0], (1 - al) + al * n[1]], s = rho / (n[0] * N[0] + n[1] * N[1]), e = [N[0] * s, N[1] * s], D = P(0, 0), E = P(...e), on = al < .005, c = on ? 'i' : 'n', seg = q => `M${P(q[0] - t[0] * 38, q[1] - t[1] * 38)}L${P(q[0] + t[0] * 38, q[1] + t[1] * 38)}`;
+      el('path', { d: `M${P(0, 34)}L${P(0, -11)}`, class: 's-i', 'stroke-dasharray': '3 4' }, g); el('path', { d: seg([0, 0]), class: 's-r', 'stroke-width': 1.8, 'stroke-dasharray': '7 5', fill: 'none' }, g); el('path', { d: seg([n[0] * rho, n[1] * rho]), class: 's-k', 'stroke-width': 3, fill: 'none' }, g);
+      const b = P(t[0] * 38, t[1] * 38), q = P(n[0] * rho + t[0] * 38, n[1] * rho + t[1] * 38); const bl = P(-t[0] * 38, -t[1] * 38); tx(g, bl[0], bl[1] + 20, 'believed surface', 'f-m'); tx(g, q[0], q[1] - 10, 'true surface', 'f-k', { 'text-anchor': 'end', 'font-weight': 600 });
+      if (rho > 1) { const m = Math.hypot(E[0] - D[0], E[1] - D[1]); el('path', { d: `M${D}L${E[0] - (E[0] - D[0]) / m * 8} ${E[1] - (E[1] - D[1]) / m * 8}`, class: 's-' + c, 'stroke-width': 2.6, 'marker-end': `url(#ex${c})` }, g); }
+      el('circle', { cx: D[0], cy: D[1], r: 6, class: 's-i f-bg', 'stroke-width': 2.2 }, g); tx(g, D[0] + 12, D[1] + 22, 'target', 'tx-i', { 'font-weight': 700 }); el('circle', { cx: E[0], cy: E[1], r: 6, class: 'f-' + c }, g); tx(g, E[0] - 13, E[1] - 8, 'executed', 'tx-' + c, { 'text-anchor': 'end', 'font-weight': 700 });
+      if (Math.abs(E[0] - D[0]) > 1) { el('path', { d: `M${E[0]} ${E[1] + 8}V268`, class: 's-r', 'stroke-dasharray': '2 3' }, g); el('path', { d: `M${D[0]} 262H${E[0]}`, class: 's-n', 'stroke-width': 3 }, g); }
+      tx(g, 10, 292, 'frontal position, kept by the task');
+      out.innerHTML = `The figure moves by <b class="c-${c}">${Math.abs(e[0]).toFixed(2)} mm</b>. ` + (on ? 'Absorbing along the yield direction, no residual can move it.' : 'Only absorption along the yield direction is immune to every residual.');
+    }
+    sA.oninput = sR.oninput = draw; draw();
+  })();
+  (function () {
+    const tb = $('#pen-table'), F = ['circle', 'square', 'star'].map(k => M.pen[k]), rr = (R, k) => range([Math.min(...R.map(o => o[k])), Math.max(...R.map(o => o[k]))], 2);
+    const row = (lab, f, c) => { const tr = document.createElement('tr'); tr.innerHTML = `<td>${lab}</td>` + F.map(x => `<td${c ? ` class="${c}"` : ''}>${f(x)}</td>`).join(''); tb.append(tr); };
+    row('Runs, IPCR / nearest point', x => `${x.ipcr.length} / ${x.np.length}`); row('IPCR shift (mm)', x => `<b>${range(x.ipcr_range, 2)}</b>`, 'c-i'); row('Nearest-point shift (mm)', x => `<b>${range(x.np_range, 1)}</b>`, 'c-n'); row('Nearest point / predicted', x => range(x.ratio_range, 2)); row('IPCR shape error (mm)', x => rr(x.ipcr, 'rms')); row('Nearest-point shape error (mm)', x => rr(x.np, 'rms'));
   })();
 
   // ---------- carrying

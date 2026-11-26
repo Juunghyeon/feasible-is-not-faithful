@@ -59,13 +59,14 @@
     let x = W - 262; for (const [c, t, d] of [['s-k', 'planned', '5 5'], ['s-i', 'IPCR', ''], ['s-n', 'nearest point', '']]) { el('path', { d: `M${x} ${H - 14}h16`, class: c, 'stroke-width': 2.4, 'stroke-dasharray': d }, s); tx(s, x + 21, H - 10, t, 'f-m', { 'font-size': 12 }); x += 21 + t.length * 6.6 + 12; }
     $('#trace-cap').textContent = `Front view, the coordinates the task keeps. Last run of each set: ${runId(F.trace.ipcr_run)}, ${runId(F.trace.np_run)}.`;
   }
-  function dots(F) {
-    const s = $('#dots'); s.innerHTML = ''; const W = 560, H = 264, l = 108, r = W - 18, X = v => l + v / 18 * (r - l); s.setAttribute('viewBox', `0 0 ${W} ${H}`);
-    for (let v = 0; v <= 18; v += 3) { el('path', { d: `M${X(v)} 18V${H - 46}`, class: 's-g' }, s); tx(s, X(v), H - 26, v, 'f-m', { 'text-anchor': 'middle' }); } tx(s, (l + r) / 2, H - 6, 'shift from the planned place (mm)', 'f-m', { 'text-anchor': 'middle' });
+  function dots(F, sel = '#dots', top = 18) {
+    const s = $(sel); if (!s) return; s.innerHTML = ''; const W = 560, H = 264, l = 108, r = W - 18, X = v => l + v / top * (r - l); s.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    for (let v = 0; v <= top; v += 3) { el('path', { d: `M${X(v)} 18V${H - 46}`, class: 's-g' }, s); tx(s, X(v), H - 26, v, 'f-m', { 'text-anchor': 'middle' }); } tx(s, (l + r) / 2, H - 6, 'shift from the planned place (mm)', 'f-m', { 'text-anchor': 'middle' });
     const row = (y, R, c, tc, lab, sub, rg, d) => { tx(s, 0, y - 1, lab, tc, { 'font-weight': 700, 'font-size': 14 }); tx(s, 0, y + 15, sub, 'f-m', { 'font-size': 11.5 }); R.forEach((o, i) => { const yy = y + (i - (R.length - 1) / 2) * 17; const e = el('circle', { cx: X(o.shift), cy: yy, r: 4.8, class: c }, s); el('title', {}, e).textContent = `${runId(o.run)}: ${o.shift.toFixed(2)} mm` + (o.pred ? `, predicted ${o.pred.toFixed(2)} mm` : ''); if (o.pred) el('path', { d: `M${X(o.pred)} ${yy - 11}v22`, class: 's-r', 'stroke-width': 2.4 }, s); });
       const hi = Math.max(...R.map(o => o.shift)), lo = Math.min(...R.map(o => o.shift)); d > 0 ? tx(s, X(hi) + 14, y + 5, rg, tc, { 'font-weight': 700, 'font-size': 14 }) : tx(s, X(lo) - 16, y + 5, rg, tc, { 'font-weight': 700, 'font-size': 14, 'text-anchor': 'end' }); };
-    row(70, F.ipcr, 'f-i', 'tx-i', 'IPCR', `${F.ipcr.length} runs`, `${range(F.ipcr_range, 2)} mm`, 1); row(164, F.np, 'f-n', 'tx-n', 'nearest point', `${F.np.length} runs`, `${range(F.np_range, 1)} mm, ${range(F.ratio_range, 2)} of predicted`, -1);
+    row(70, F.ipcr, 'f-i', 'tx-i', 'IPCR', `${F.ipcr.length} runs`, `${range(F.ipcr_range, 2)} mm`, 1); row(164, F.np, 'f-n', 'tx-n', 'nearest point', `${F.np.length} runs`, `${range(F.np_range, 1)} mm, ${range(F.ratio_range, 2)} of ${F.prior ? 'the prior prediction' : 'predicted'}`, -1);
   }
+  if (M.pen.circle18) dots(M.pen.circle18, '#dots18', 24);
   // ---------- registered simulation: shift per structure, one dot per board (cell mean), predictions as ticks
   function simdots() {
     const s = $('#simdots'); if (!s || !M.sim) return; s.innerHTML = '';
@@ -129,7 +130,7 @@
     sA.oninput = sR.oninput = draw; draw();
   })();
   (function () {
-    const tb = $('#pen-table'), F = ['circle', 'square', 'star'].map(k => M.pen[k]), rr = (R, k) => range([Math.min(...R.map(o => o[k])), Math.max(...R.map(o => o[k]))], 2);
+    const tb = $('#pen-table'), F = ['circle', 'square', 'star', 'circle18'].filter(k => M.pen[k]).map(k => M.pen[k]), rr = (R, k) => range([Math.min(...R.map(o => o[k])), Math.max(...R.map(o => o[k]))], 2);
     const row = (lab, f, c) => { const tr = document.createElement('tr'); tr.innerHTML = `<td>${lab}</td>` + F.map(x => `<td${c ? ` class="${c}"` : ''}>${f(x)}</td>`).join(''); tb.append(tr); };
     row('Runs, IPCR / nearest point', x => `${x.ipcr.length} / ${x.np.length}`); row('IPCR shift (mm)', x => `<b>${range(x.ipcr_range, 2)}</b>`, 'c-i'); row('Nearest-point shift (mm)', x => `<b>${range(x.np_range, 1)}</b>`, 'c-n'); row('Nearest point / predicted', x => range(x.ratio_range, 2)); row('IPCR shape error (mm)', x => rr(x.ipcr, 'rms')); row('Nearest-point shape error (mm)', x => rr(x.np, 'rms'));
   })();

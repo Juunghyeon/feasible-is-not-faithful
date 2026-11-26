@@ -16,8 +16,8 @@
 
   // ---------- hero and the rendered film
   const hero = $('#hero-video'), hb = $('.hero-pause'), showHero = () => { hb.textContent = hero.paused ? 'Play' : 'Pause'; hb.setAttribute('aria-pressed', String(hero.paused)); };
-  if (M.media.hero.video) { hero.src = M.media.hero.video; hb.onclick = () => hero.paused ? hero.play() : hero.pause(); hero.onplay = hero.onpause = showHero; if (!calm) hero.play().catch(showHero); hero.ontimeupdate = () => hero.parentElement.classList.toggle("early", hero.currentTime > 0 && hero.currentTime < .42 * hero.duration); showHero(); } else hb.hidden = true;
-  const mech = $('#mech'), mm = M.media.mechanism;
+  if (hero && hb && M.media.hero.video) { hero.src = M.media.hero.video; hb.onclick = () => hero.paused ? hero.play() : hero.pause(); hero.onplay = hero.onpause = showHero; if (!calm) hero.play().catch(showHero); hero.ontimeupdate = () => hero.parentElement.classList.toggle("early", hero.currentTime > 0 && hero.currentTime < .42 * hero.duration); showHero(); } else if (hb) hb.hidden = true;
+  const mech = $('#mech'), mm = M.media.concept || M.media.mechanism;
   if (mm && mm.video) { mech.poster = mm.poster; mech.src = mm.video; const mb = $('.film .vbtn'); let mu = false; const ms = () => { mb.textContent = mech.paused ? 'Play' : 'Pause'; mb.setAttribute('aria-pressed', String(mech.paused)); }; mech.onplay = mech.onpause = ms; ms(); const mt = () => { if (mech.paused) { mu = false; mech.play().catch(() => {}); } else { mu = true; mech.pause(); } }; mb.onclick = mt; mech.onclick = mt; if (!calm && 'IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { if (!mu) mech.play().catch(() => {}); } else mech.pause(); }), { threshold: .4 }).observe(mech); } else mech.closest('figure').hidden = true;
 
   // ---------- two videos, one clock

@@ -136,9 +136,15 @@
 
   // ---------- carrying
   const box = pair($('#box-pair')), st = $('#box-pair'), soon = $('#post-soon'), seg = $('#task-seg');
-  tabs(seg, 'mode', m => { st.dataset.mode = m; });
+  let segMode = 'split'; tabs(seg, 'mode', m => { segMode = m; st.dataset.mode = m; });
   tabs($('#wall-tabs'), 'wall', w => {
     const post = w === 'post', ok = !post || (M.media.post_uf && M.media.post_uy); st.hidden = !ok; soon.hidden = ok; seg.style.visibility = ok ? '' : 'hidden'; if (!ok) { box.pause(); $('#box-cap').textContent = ''; return; }
+    if (w === 'free') {                                        // one run, no wall: show it alone
+      const f = M.media.free_uy, b = M.box.free; seg.style.visibility = 'hidden'; st.dataset.mode = 'uy'; box.set('free_uy', 'free_uy');
+      $('#box-cap').textContent = `No wall: the same controller, task yaw free (U-yaw), carried the box ${num(b.path_mm / 10, 0)} cm. The contact weight stayed at ${num(b.cw_max, 3)}, so nothing yielded: largest sideways deviation ${num(b.side_max_mm, 1)} mm (${num(Math.min(M.box.summary.yield_uf_mm[0], M.box.summary.yield_uy_mm[0]), 0)} to ${num(Math.max(M.box.summary.yield_uf_mm[1], M.box.summary.yield_uy_mm[1]), 0)} mm against the tilted wall), largest progress error ${num(b.progress_max_mm, 1)} mm. The force estimate alone read up to ${num(b.f_max_N, 1)} N with nothing to touch; the contact weight kept the controller from acting on it. Real robot seen from above, played \u00d7${f.speed} (recording ${f.start}\u2013${f.end} s, last frame held). Run ${runId(f.run)}.`;
+      return;
+    }
+    st.dataset.mode = segMode;
     const m = M.media[w + '_uf']; box.set(w + '_uf', w + '_uy'); $('#box-cap').textContent = `Real robot seen from above, same camera, played \u00d7${m.speed} (${secs(m, M.media[w + '_uy'])}, last frame held), aligned where the carry starts, to about half a second. Runs ${runId(m.run)} and ${runId(M.media[w + '_uy'].run)}.`;
   });
   (function () {

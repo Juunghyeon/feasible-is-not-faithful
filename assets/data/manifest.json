@@ -2,6 +2,7 @@
  "generated_by": "ipcr-paper/project_site/prep/build_manifest_u41m.py",
  "sources": [
   "experiments/sim2real_unified/hw/u41m_hw.json",
+  "experiments/sim2real_unified/hw/u41m_hw_free.json",
   "experiments/sim2real_unified/hw/u41m_hw_traces.npz",
   "experiments/sim2real_unified/hw/board_B8w.json",
   "sim2real/docs/HW_U41M_RESULTS_2026-11-25_claude.md (box table)",
@@ -14280,6 +14281,20 @@
     55.8,
     57.0
    ]
+  },
+  "free": {
+   "run": "HW_u41_uy_free_1_I_d65_20261125_195159",
+   "n": 1401,
+   "window_s": [
+    31.5,
+    102.9
+   ],
+   "path_mm": 728.5,
+   "progress_max_mm": 2.3,
+   "side_max_mm": 3.0,
+   "cw_max": 0.001,
+   "f_contact_frac": 0.458,
+   "f_max_N": 11.6
   }
  },
  "media": {
@@ -14370,6 +14385,14 @@
    "run": "HW_u41_uy_ywall_1_I_d65_20261125_201049",
    "start": 26.6,
    "end": 138.6
+  },
+  "free_uy": {
+   "poster": "assets/media/free_uy.jpg",
+   "video": "assets/media/free_uy.mp4",
+   "speed": 8,
+   "run": "HW_u41_uy_free_1_I_d65_20261125_195159",
+   "start": 26.0,
+   "end": 126.0
   },
   "concept": {
    "poster": "assets/media/concept.jpg",

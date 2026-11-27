@@ -63,7 +63,7 @@
     const s = $(sel); if (!s) return; s.innerHTML = ''; const W = 560, H = 264, l = 108, r = W - 18, X = v => l + v / top * (r - l); s.setAttribute('viewBox', `0 0 ${W} ${H}`);
     for (let v = 0; v <= top; v += 3) { el('path', { d: `M${X(v)} 18V${H - 46}`, class: 's-g' }, s); tx(s, X(v), H - 26, v, 'f-m', { 'text-anchor': 'middle' }); } tx(s, (l + r) / 2, H - 6, 'shift from the planned place (mm)', 'f-m', { 'text-anchor': 'middle' });
     const row = (y, R, c, tc, lab, sub, rg, d) => { tx(s, 0, y - 1, lab, tc, { 'font-weight': 700, 'font-size': 14 }); tx(s, 0, y + 15, sub, 'f-m', { 'font-size': 11.5 }); R.forEach((o, i) => { const yy = y + (i - (R.length - 1) / 2) * 17; const e = el('circle', { cx: X(o.shift), cy: yy, r: 4.8, class: c }, s); el('title', {}, e).textContent = `${runId(o.run)}: ${o.shift.toFixed(2)} mm` + (o.pred ? `, predicted ${o.pred.toFixed(2)} mm` : ''); if (o.pred) el('path', { d: `M${X(o.pred)} ${yy - 11}v22`, class: 's-r', 'stroke-width': 2.4 }, s); });
-      const hi = Math.max(...R.map(o => o.shift)), lo = Math.min(...R.map(o => o.shift)); d > 0 ? tx(s, X(hi) + 14, y + 5, rg, tc, { 'font-weight': 700, 'font-size': 14 }) : tx(s, X(lo) - 16, y + 5, rg, tc, { 'font-weight': 700, 'font-size': 14, 'text-anchor': 'end' }); };
+      const hi = Math.max(...R.map(o => o.shift)), lo = Math.min(...R.map(o => o.shift), ...R.filter(o => o.pred).map(o => o.pred)); d > 0 ? tx(s, X(hi) + 14, y + 5, rg, tc, { 'font-weight': 700, 'font-size': 14 }) : tx(s, X(lo) - 16, y + 5, rg, tc, { 'font-weight': 700, 'font-size': 14, 'text-anchor': 'end' }); };
     row(70, F.ipcr, 'f-i', 'tx-i', 'IPCR', `${F.ipcr.length} runs`, `${range(F.ipcr_range, 2)} mm`, 1); row(164, F.np, 'f-n', 'tx-n', 'nearest point', `${F.np.length} runs`, `${range(F.np_range, 1)} mm, ${range(F.ratio_range, 2)} of ${F.prior ? 'the prior prediction' : 'predicted'}`, -1);
   }
   if (M.pen.circle18) dots(M.pen.circle18, '#dots18', 24);
@@ -74,7 +74,7 @@
     const W = 760, rh = 30, top = 14, H = top + rows.length * rh + 40, l = 150, r = W - 92, lo = Math.log10(0.01), hi = Math.log10(20), X = v => l + (Math.log10(Math.max(v, 0.011)) - lo) / (hi - lo) * (r - l);
     s.setAttribute('viewBox', `0 0 ${W} ${H}`);
     [0.01, 0.1, 1, 10].forEach(v => { el('path', { d: `M${X(v)} ${top - 4}V${H - 34}`, class: 's-g' }, s); tx(s, X(v), H - 16, v < 1 ? String(v) : String(v), 'f-m', { 'text-anchor': 'middle', 'font-size': 12 }); });
-    tx(s, (l + r) / 2, H - 1, 'shift of the figure (mm)', 'f-m', { 'text-anchor': 'middle', 'font-size': 12 });
+    tx(s, (l + r) / 2, H - 1, 'shift of the figure (mm), log scale', 'f-m', { 'text-anchor': 'middle', 'font-size': 12 }); s.style.overflow = 'visible';
     const MK = ['circle', 'square', 'diamond', 'triangle'];
     const mark = (k, x, y, cls) => { const z = 5; const d = { circle: null, square: `M${x - z} ${y - z}h${2 * z}v${2 * z}h${-2 * z}z`, diamond: `M${x} ${y - z - 1}l${z + 1} ${z + 1}l${-z - 1} ${z + 1}l${-z - 1} ${-z - 1}z`, triangle: `M${x} ${y - z - 1}l${z + 1} ${2 * z}h${-2 * z - 2}z` }[k];
       return d ? el('path', { d, class: cls }, s) : el('circle', { cx: x, cy: y, r: z, class: cls }, s); };

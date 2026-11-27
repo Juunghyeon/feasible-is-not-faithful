@@ -4,8 +4,8 @@
   "experiments/sim2real_unified/hw/u41m_hw.json",
   "experiments/sim2real_unified/hw/u41m_hw_free.json",
   "experiments/sim2real_unified/hw/tilt2_hw.json",
+  "experiments/sim2real_unified/hw/inkvid/inkvid.json",
   "experiments/sim2real_unified/hw/board_B17v2_tape.json",
-  "manuscript_RAL/main.tex (registered simulation run count in the abstract)",
   "experiments/sim2real_unified/hw/u41m_hw_traces.npz",
   "experiments/sim2real_unified/hw/board_B8w.json",
   "sim2real/docs/HW_U41M_RESULTS_2026-11-25_claude.md (box table)",
@@ -38,7 +38,23 @@
   "ipcr_all": [
    0.21,
    0.34
-  ]
+  ],
+  "ink": {
+   "n": 3,
+   "n_total": 4,
+   "offset": [
+    16.87,
+    17.09
+   ],
+   "ratio": [
+    1.0,
+    1.02
+   ],
+   "encoder": [
+    16.59,
+    16.9
+   ]
+  }
  },
  "hero": {
   "ipcr_run": "HW_u41_cI_B8w_4_I_d5_20261125_171906",
@@ -14824,6 +14840,9 @@
    ],
    "n_runs": 64
   },
-  "n_registered_manuscript": 590
+  "factor": [
+   9.8,
+   35.5
+  ]
  }
 }

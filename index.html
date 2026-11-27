@@ -16,11 +16,11 @@
 <link rel="stylesheet" href="assets/css/site.css">
 </head>
 <body>
-<a class="skip" href="#drawing">Skip to the results</a>
+<a class="skip" href="#results">Skip to the results</a>
 <header class="bar"><div class="wrap">
   <a class="back" href="https://juunghyeon.github.io/projects/" aria-label="Back to all projects"><span aria-hidden="true">←</span> Projects</a>
   <a class="mark" href="#top"><svg viewBox="0 0 32 32" aria-hidden="true"><circle class="m-i" cx="13" cy="15" r="9"/><circle class="m-n" cx="19" cy="17" r="9"/></svg>Feasible Is Not Faithful</a>
-  <nav aria-label="Sections"><a href="#overview">Position</a><a href="#method">Method</a><a href="#drawing">Robot</a><a href="#simulation">Simulation</a><a href="#related">Related work</a><a href="#limits">Limitations</a><a href="#references">References</a></nav>
+  <nav aria-label="Sections"><a href="#motivation">Motivation</a><a href="#idea">Key idea</a><a href="#method">Method</a><a href="#results">Results</a><a href="#paper">Paper</a></nav>
 </div></header>
 
 <main id="top">
@@ -31,7 +31,7 @@
   <p class="claim">Restoring contact can quietly move what a task prescribes. For static affine corrections, the prescribed coordinates are kept exactly when the correction stays in directions the task permits; for other directions, their displacement can be predicted before the run. We test this on contact with unknown surfaces.</p>
   <p class="authors">Jeonghyeon Kim <span>·</span> Shinsuk Park</p>
   <p class="aff">School of Mechanical Engineering, Korea University</p>
-  <p class="links"><span class="btn off">Paper <small>after submission</small></span><span class="btn off">Code <small>after review</small></span><a class="btn" href="#drawing">Robot videos</a></p>
+  <p class="links"><span class="btn off">Paper <small>after submission</small></span><span class="btn off">Code <small>after review</small></span><a class="btn" href="#drawing">Robot videos</a><a class="btn" href="#cite">Cite</a></p>
 </section>
 
 <!-- 2 teaser: concept film + the headline hardware result -->
@@ -46,19 +46,13 @@
   </aside>
 </section>
 
-<!-- 3 position -->
-<section id="overview"><div class="wrap">
-  <header class="sec"><p class="part">Position</p><h2>What feasibility leaves unspecified</h2></header>
+<!-- 3 motivation -->
+<section id="motivation" class="band"><div class="wrap">
+  <header class="sec"><p class="part">Motivation</p><h2>Restoring contact can move the task</h2></header>
   <div class="prose lead">
-    <p>References planned from a model become infeasible on the real surface, and many corrections restore contact and regulate force equally well. They differ in what they keep, and tracking, force and contact are all measured against the corrected point, so none of them shows where the task ended up. The choice arises in safety filtering, constrained policies, MPC and compliant control; we characterize it for static affine corrections. The task names the coordinates it must keep, <math><mrow><mi>L</mi><mi>x</mi></mrow></math>, and the directions in which it may yield, <math><mrow><mi>𝒟</mi></mrow></math>.</p>
+    <p>References planned from a model become infeasible on the real surface, and many corrections restore contact and regulate force equally well. They differ in what they keep, and tracking, force and contact are all measured against the corrected point, so none of them shows where the task ended up. The choice arises in safety filtering, constrained policies, MPC and compliant control; we characterize it for static affine corrections.</p>
+    <p class="ask">Feasibility leaves a task decision open: which coordinates may change to restore contact?</p>
   </div>
-  <ol class="claims">
-    <li class="card"><p class="num">1 · Preserve</p><h3>Correct inside what the task permits</h3><p class="eq"><math><mrow><mi>range</mi><mspace width='0.17em'/><mi>B</mi><mo>⊆</mo><mi>ker</mi><mspace width='0.17em'/><mi>L</mi></mrow></math></p><p>For correction amounts that span the mismatches, the prescribed coordinates are kept exactly when the correction directions lie in <math><mrow><mi>ker</mi><mspace width="0.17em"/><mi>L</mi></mrow></math>.</p></li>
-    <li class="card"><p class="num">2 · Reach</p><h3>Check that contact is reachable</h3><p class="eq"><math><mrow><mi>rank</mi><mo stretchy="false">(</mo><mi>A</mi><mi>D</mi><mo stretchy="false">)</mo><mo>=</mo><mi>k</mi></mrow></math></p><p>Every constraint can then be met while keeping <math><mrow><mi>L</mi><mi>x</mi></mrow></math>; the point is unique when <math><mrow><mi>A</mi><mi>D</mi></mrow></math> is square and invertible. If the rank test fails, some mismatches cannot be corrected while keeping <math><mrow><mi>L</mi><mi>x</mi></mrow></math>.</p></li>
-    <li class="card"><p class="num">3 · Predict</p><h3>Price any other direction</h3><p class="eq"><math><mrow><mi>G</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mo>−</mo><mi>L</mi><mi>B</mi><msup><mrow><mo stretchy="false">(</mo><mi>A</mi><mi>B</mi><mo stretchy="false">)</mo></mrow><mrow><mo>−</mo><mn>1</mn></mrow></msup></mrow></math></p><p>For <math><mrow><mi>A</mi><mi>B</mi></mrow></math> invertible, correcting along <math><mrow><mi>B</mi></mrow></math> moves the prescribed coordinates by <math><mrow><mi>G</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><mi>ρ</mi></mrow></math>, where <math><mrow><mi>ρ</mi></mrow></math> is the mismatch removed, before anything runs.</p></li>
-  </ol>
-  <p class="note">Direction allocation (hybrid control), the oblique projector and the rank test are classical; the paper adds their task-relative characterization and the closed-form cost, tested prospectively. The nearest point is the right rule when the task lives on the surface, <math><mrow><mi>𝒟</mi><mo>=</mo><mi>span</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow></math>.</p>
-  <div class="prose"><p><b class="c-i">Intent-preserving constraint realization (IPCR)</b> implements the condition with joint sensing only: no surface, normal or contact event is estimated, and drawing and box transport share one controller setting.</p></div>
   <figure class="overview">
     <div class="ovwrap"><picture><source media="(max-width: 640px)" srcset="assets/img/overview_a.webp" type="image/webp"><source srcset="assets/img/overview.webp" type="image/webp"><img src="assets/img/overview.png" width="1600" height="496" loading="lazy" alt="Overview: (a) from a planned reference behind a tilted board, the nearest point corrects along the normal and shifts the figure, IPCR corrects along the task depth and keeps it; (b) the robot's two circles, IPCR 0.25 mm and nearest point 16.8 mm against 16.9 mm predicted from a plane fitted after the runs; (c) the same controller carrying a box along a tilted wall, yielding sideways."></picture>
       <div class="ovm" aria-hidden="true"><img src="assets/img/overview_b.webp" alt="" loading="lazy"><img src="assets/img/overview_c.webp" alt="" loading="lazy"></div></div>
@@ -66,23 +60,15 @@
   </figure>
 </div></section>
 
-<!-- 4 method -->
-<section id="method" class="band"><div class="wrap">
-  <header class="sec"><p class="part">Method</p><h2>Let the task say what may yield</h2></header>
-  <div class="prose">
-    <p>The task names the directions in which motion may depart from the reference, the <b>yield subspace</b> <math><mrow><mi>𝒟</mi></mrow></math>, and the coordinates it must keep, <b><math><mrow><mi>L</mi><mi>x</mi></mrow></math></b> with <math><mrow><mi>L</mi><mi>D</mi><mo>=</mo><mn>0</mn></mrow></math>. The nearest point is the right rule for a task defined on the surface, <math><mrow><mi>𝒟</mi><mo>=</mo><mi>span</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow></math>; for a task fixed off the surface it moves what should stay.</p>
-  </div>
-  <figure class="tablewrap"><table class="tasks"><thead><tr><th>Task</th><th>may yield</th><th>must keep</th></tr></thead><tbody>
-    <tr><td><b>Draw</b> at an externally fixed place</td><td>depth</td><td>frontal position</td></tr>
-    <tr><td><b class="c-i">Carry, U-fixed</b></td><td>sideways</td><td>progress, height, yaw</td></tr>
-    <tr><td><b class="c-y">Carry, U-yaw</b></td><td>sideways, and yaw with the contact moment</td><td>progress, height</td></tr>
-    <tr><td><b class="c-n">Task on the surface</b></td><td>along the normal</td><td>position on the surface</td></tr>
-  </tbody></table></figure>
-  <div class="steps">
-    <div class="card step"><p class="num">1 · Target</p><h3>Correct only inside <math><mrow><mi>𝒟</mi></mrow></math></h3><math display="block"><mrow><msubsup><mi>x</mi><mi>D</mi><mo>⋆</mo></msubsup><mo>=</mo><mi>r</mi><mo>+</mo><mi>D</mi><msup><mrow><mo stretchy="false">(</mo><mi>A</mi><mi>D</mi><mo stretchy="false">)</mo></mrow><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo stretchy="false">(</mo><mi>b</mi><mo>−</mo><mi>A</mi><mi>r</mi><mo stretchy="false">)</mo></mrow></math><p>The point on the constraint that keeps <math><mrow><mi>L</mi><mi>x</mi></mrow></math>. The nearest point drifts instead, by <math><mrow><mo stretchy="false" lspace="0" rspace="0">|</mo><mi>h</mi><mo stretchy="false" lspace="0" rspace="0">|</mo><mspace width="0.17em"/><mi>sin</mi><mspace width="0.15em"/><mi>θ</mi></mrow></math> in the preserved coordinates for one tilted plane. For a static projection onto one plane the metric decides: <math><mrow><mi>W</mi><mo>=</mo><mi>I</mi></mrow></math> gives the nearest point, and raising the weight on <math><mrow><mi>L</mi><mi>x</mi></mrow></math> approaches this point.</p></div>
-    <div class="card step"><p class="num">2 · Execution</p><h3>Absorb where it cannot leak</h3><math display="block"><mrow><mi>L</mi><mo stretchy="false">(</mo><mi>x</mi><mo>−</mo><mi>r</mi><mo stretchy="false">)</mo><mo>=</mo><mi>L</mi><mo stretchy="false">(</mo><mi>z</mi><mo>−</mo><mi>r</mi><mo stretchy="false">)</mo><mo>+</mo><mi>G</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><msub><mi>ρ</mi><mi>z</mi></msub></mrow></math><p>Whatever mismatch is left after targeting is absorbed along the direction <math><mrow><mi>B</mi></mrow></math> the servo realizes, and reaches <math><mrow><mi>L</mi><mi>x</mi></mrow></math> unless <math><mrow><mi>L</mi><mi>B</mi><mo>=</mo><mn>0</mn></mrow></math>. Target and absorption must both respect <math><mrow><mi>ker</mi><mspace width="0.17em"/><mi>L</mi></mrow></math>.</p></div>
-    <div class="card step"><p class="num">3 · Controller</p><h3>One controller, joint sensing only</h3><p>A torque-level NMPC tracks the target; the depth follows a force-regulated speed on a joint-torque estimate, weighted by a continuous contact belief. No plane, normal or contact event is estimated. Drawing and transport share the controller setting; the task supplies <math><mrow><mi>𝒟</mi></mrow></math>, <math><mrow><mi>L</mi></mrow></math>, the attitude, the path, the force target and the tool length.</p></div>
-  </div>
+<!-- 4 key idea -->
+<section id="idea"><div class="wrap">
+  <header class="sec"><p class="part">Key idea</p><h2>Let the task choose the correction direction</h2></header>
+  <div class="prose lead"><p>The task names the coordinates it must keep, <math><mrow><mi>L</mi><mi>x</mi></mrow></math>, and the directions in which it may yield, <math><mrow><mi>𝒟</mi></mrow></math>. Within a static affine model, three results follow for any correction direction <math><mrow><mi>B</mi></mrow></math>.</p></div>
+  <ol class="claims">
+    <li class="card"><p class="num">1 · Preserve</p><h3>Correct inside what the task permits</h3><p class="eq"><math><mrow><mi>range</mi><mspace width='0.17em'/><mi>B</mi><mo>⊆</mo><mi>ker</mi><mspace width='0.17em'/><mi>L</mi></mrow></math></p><p>For correction amounts that span the mismatches, the prescribed coordinates are kept exactly when the correction directions lie in <math><mrow><mi>ker</mi><mspace width="0.17em"/><mi>L</mi></mrow></math>.</p></li>
+    <li class="card"><p class="num">2 · Reach</p><h3>Check that contact is reachable</h3><p class="eq"><math><mrow><mi>rank</mi><mo stretchy="false">(</mo><mi>A</mi><mi>D</mi><mo stretchy="false">)</mo><mo>=</mo><mi>k</mi></mrow></math></p><p>Every constraint can then be met while keeping <math><mrow><mi>L</mi><mi>x</mi></mrow></math>; the point is unique when <math><mrow><mi>A</mi><mi>D</mi></mrow></math> is square and invertible. If the rank test fails, some mismatches cannot be corrected while keeping <math><mrow><mi>L</mi><mi>x</mi></mrow></math>.</p></li>
+    <li class="card"><p class="num">3 · Predict</p><h3>Price any other direction</h3><p class="eq"><math><mrow><mi>G</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mo>−</mo><mi>L</mi><mi>B</mi><msup><mrow><mo stretchy="false">(</mo><mi>A</mi><mi>B</mi><mo stretchy="false">)</mo></mrow><mrow><mo>−</mo><mn>1</mn></mrow></msup></mrow></math></p><p>For <math><mrow><mi>A</mi><mi>B</mi></mrow></math> invertible, correcting along <math><mrow><mi>B</mi></mrow></math> moves the prescribed coordinates by <math><mrow><mi>G</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><mi>ρ</mi></mrow></math>, where <math><mrow><mi>ρ</mi></mrow></math> is the mismatch removed, before anything runs.</p></li>
+  </ol>
   <div class="tryrow">
     <div class="card widget" id="w-target">
       <h3>Try it: where does the corrected point go?</h3>
@@ -95,6 +81,27 @@
       <div class="ctl"><label for="w-a">absorption: yield direction to normal</label><input id="w-a" type="range" min="0" max="1" step="0.01" value="1"><output></output>
         <label for="w-r">residual ρ</label><input id="w-r" type="range" min="0" max="20" step="1" value="10"><output></output></div>
       <p class="wout" aria-live="polite"></p><p class="cap">Geometry of the leakage law for one plane, not a measurement.</p></div>
+  </div>
+  <p class="note">Direction allocation (hybrid control), the oblique projector and the rank test are classical; the paper adds their task-relative characterization and the closed-form cost, tested prospectively. The nearest point is the right rule when the task lives on the surface, <math><mrow><mi>𝒟</mi><mo>=</mo><mi>span</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow></math>.</p>
+</div></section>
+
+<!-- 5 method -->
+<section id="method" class="band"><div class="wrap">
+  <header class="sec"><p class="part">Method</p><h2>Intent-preserving constraint realization</h2></header>
+  <div class="prose"><p><b class="c-i">Intent-preserving constraint realization (IPCR)</b> implements the condition with joint sensing only: no surface, normal or contact event is estimated, and drawing and box transport share one controller setting.</p></div>
+  <div class="prose">
+    <p>Each task names its <b>yield subspace</b> <math><mrow><mi>𝒟</mi></mrow></math> and its kept coordinates <math><mrow><mi>L</mi><mi>x</mi></mrow></math>, with <math><mrow><mi>L</mi><mi>D</mi><mo>=</mo><mn>0</mn></mrow></math>:</p>
+  </div>
+  <figure class="tablewrap"><table class="tasks"><thead><tr><th>Task</th><th>may yield</th><th>must keep</th></tr></thead><tbody>
+    <tr><td><b>Draw</b> at an externally fixed place</td><td>depth</td><td>frontal position</td></tr>
+    <tr><td><b class="c-i">Carry, U-fixed</b></td><td>sideways</td><td>progress, height, yaw</td></tr>
+    <tr><td><b class="c-y">Carry, U-yaw</b></td><td>sideways, and yaw with the contact moment</td><td>progress, height</td></tr>
+    <tr><td><b class="c-n">Task on the surface</b></td><td>along the normal</td><td>position on the surface</td></tr>
+  </tbody></table></figure>
+  <div class="steps">
+    <div class="card step"><p class="num">1 · Target</p><h3>Correct only inside <math><mrow><mi>𝒟</mi></mrow></math></h3><math display="block"><mrow><msubsup><mi>x</mi><mi>D</mi><mo>⋆</mo></msubsup><mo>=</mo><mi>r</mi><mo>+</mo><mi>D</mi><msup><mrow><mo stretchy="false">(</mo><mi>A</mi><mi>D</mi><mo stretchy="false">)</mo></mrow><mrow><mo>−</mo><mn>1</mn></mrow></msup><mo stretchy="false">(</mo><mi>b</mi><mo>−</mo><mi>A</mi><mi>r</mi><mo stretchy="false">)</mo></mrow></math><p>The point on the constraint that keeps <math><mrow><mi>L</mi><mi>x</mi></mrow></math>. The nearest point drifts instead, by <math><mrow><mo stretchy="false" lspace="0" rspace="0">|</mo><mi>h</mi><mo stretchy="false" lspace="0" rspace="0">|</mo><mspace width="0.17em"/><mi>sin</mi><mspace width="0.15em"/><mi>θ</mi></mrow></math> in the preserved coordinates for one tilted plane. For a static projection onto one plane the metric decides: <math><mrow><mi>W</mi><mo>=</mo><mi>I</mi></mrow></math> gives the nearest point, and raising the weight on <math><mrow><mi>L</mi><mi>x</mi></mrow></math> approaches this point.</p></div>
+    <div class="card step"><p class="num">2 · Execution</p><h3>Absorb where it cannot leak</h3><math display="block"><mrow><mi>L</mi><mo stretchy="false">(</mo><mi>x</mi><mo>−</mo><mi>r</mi><mo stretchy="false">)</mo><mo>=</mo><mi>L</mi><mo stretchy="false">(</mo><mi>z</mi><mo>−</mo><mi>r</mi><mo stretchy="false">)</mo><mo>+</mo><mi>G</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><msub><mi>ρ</mi><mi>z</mi></msub></mrow></math><p>Whatever mismatch is left after targeting is absorbed along the direction <math><mrow><mi>B</mi></mrow></math> the servo realizes, and reaches <math><mrow><mi>L</mi><mi>x</mi></mrow></math> unless <math><mrow><mi>L</mi><mi>B</mi><mo>=</mo><mn>0</mn></mrow></math>. Target and absorption must both respect <math><mrow><mi>ker</mi><mspace width="0.17em"/><mi>L</mi></mrow></math>.</p></div>
+    <div class="card step"><p class="num">3 · Controller</p><h3>One controller, joint sensing only</h3><p>A torque-level NMPC tracks the target; the depth follows a force-regulated speed on a joint-torque estimate, weighted by a continuous contact belief. No plane, normal or contact event is estimated. Drawing and transport share the controller setting; the task supplies <math><mrow><mi>𝒟</mi></mrow></math>, <math><mrow><mi>L</mi></mrow></math>, the attitude, the path, the force target and the tool length.</p></div>
   </div>
   <div class="prose"><details class="more"><summary>The results in full</summary>
     <div class="thm"><h3>Theorem 1 · Preservation</h3><math display="block"><mrow><mi>L</mi><mi>x</mi><mo>=</mo><mi>L</mi><mi>r</mi><mspace width='0.6em'/><mo>⇔</mo><mspace width='0.6em'/><mi>range</mi><mspace width='0.17em'/><mi>B</mi><mo>⊆</mo><mi>ker</mi><mspace width='0.17em'/><mi>L</mi></mrow></math><p>for a correction <math><mrow><mi>B</mi></mrow></math> whose attainable amounts span all mismatches. With the task's <math><mrow><mi>L</mi></mrow></math> fixed, the commanded <math><mrow><mi>L</mi><mi>x</mi></mrow></math> does not depend on the surface; only the amount of correction does.</p></div>
@@ -112,9 +119,10 @@
   </details></div>
 </div></section>
 
+<div id="results">
 <!-- 5 robot: drawing -->
 <section id="drawing"><div class="wrap">
-  <header class="sec"><p class="part">Results · real robot</p><h2>Same figure, two rules, two boards</h2></header>
+  <header class="sec"><p class="part">Results · robot, drawing</p><h2>Same figure, two rules, two boards</h2></header>
   <div class="prose"><p>Both rules are the same controller, given a different yield direction. At <span data-n="summary.tilt2_deg" data-d="0"></span>° the board plane was taped before the first run and the nearest point's shift predicted from it. On a board at about 11°, the pen drew a circle, a square and a star at 5 mm/s, IPCR and the nearest point alternating. The nearest point received the normal fitted to the board; IPCR received neither the board's pose nor its normal. The short black stroke before each black figure is the nearest-point tip sliding from the planned start to its shifted one. </p></div>
     <figure class="card prior"><div class="priorhead"><p class="num">Headline · prediction fixed before the runs</p><h3>Circle on a board at <span data-n="summary.tilt2_deg" data-d="0"></span>°</h3><p>The board plane was measured with a tape and committed before the first run; the nearest point's shift was predicted from it, and the criteria (IPCR within 0.5 mm, the nearest point within 0.85–1.15 of the prediction, three runs each) were set in advance. Both passed in every run.</p></div><svg id="dots18" role="img" aria-label="Shift per run on the 18 degree board, with the shift predicted before the runs"></svg>
     <figcaption class="cap">Grey ticks: the shift predicted from the taped plane, before the runs. The nearest point's excess matches the pen tip's <span data-r="pen.circle18.tip_offset_mm" data-d="1"></span> mm offset from the taped plane. No video of this set.</figcaption></figure>
@@ -138,7 +146,7 @@
 
 <!-- 6 robot: transport -->
 <section id="carrying" class="band"><div class="wrap">
-  <header class="sec"><p class="part">Results · real robot</p><h2>Change the task, not the controller</h2></header>
+  <header class="sec"><p class="part">Results · robot, carrying</p><h2>Change the task, not the controller</h2></header>
   <div class="prose"><p>The same controller and settings carried a 250 × 200 × 150 mm box along a straight path, past a wall parallel to the path (within 0.6°) and one tilted by 4 to 5°. Transport may yield sideways and must keep progress and height. <b class="c-i">U-fixed</b> also keeps the yaw; <b class="c-y">U-yaw</b> lets it yield to the contact moment. One input differs.</p></div>
   <div class="rowbar">
     <div class="tabs" role="tablist" aria-label="Wall" id="wall-tabs"><button role="tab" data-wall="tilt">Tilted wall</button><button role="tab" data-wall="wall">Parallel wall</button><button role="tab" data-wall="free">Free space</button><button role="tab" data-wall="post">Post</button></div>
@@ -159,6 +167,14 @@
       <div><dt class="c-y">Yaw free: mean yaw while on the wall</dt><dd><b><span data-r="box.summary.uy_mean" data-d="1" data-rev="1"></span>°</b>; over the whole slide, standard deviation <span data-r="box.summary.uy_sd_all" data-d="1"></span>°, down to <span data-n="box.summary.uy_min" data-d="1"></span>°</dd></div>
       <div><dt>Sideways yield</dt><dd><span data-r="box.summary.yield_uf_mm" data-d="1"></span> mm keeping yaw, <span data-r="box.summary.yield_uy_mm" data-d="1"></span> mm with yaw free: <b>letting yaw go did not reduce it here</b> (the walls were not at exactly the same angle)</dd></div>
     </dl>
+  </div>
+  <div class="prose">
+    <details><summary>Hardware setup</summary><dl class="facts">
+      <div><dt>Robot</dt><dd>Dobot CR3A, joint sensing only</dd></div>
+      <div><dt>Pen</dt><dd>spring pen, 5 mm/s, one pass, 12 N target (estimated force)</dd></div>
+      <div><dt>Box</dt><dd>250 × 200 × 150 mm, 8 N target; parallel and tilted wall, three runs per task and wall</dd></div>
+      <div><dt>Runs shown</dt><dd><span data-n="summary.n_hw_draw" data-d="0"></span> drawings (11°: circle 4 and 4, square 3 and 3, star 3 and 3; <span data-n="summary.tilt2_deg" data-d="0"></span>°: circle 3 and 3) and <span data-n="box.summary.runs" data-d="0"></span> carries. Excluded: runs that hit the board during set-up, one stopped by contact with a person and its pair, and box runs cancelled, stopped midway or blocked by a wall placed too far in</dd></div>
+    </dl></details>
   </div>
 </div></section>
 
@@ -184,21 +200,15 @@
     <p class="cap">A metric that fixes the target is half of the answer. With a 10 mm error in the believed plane, the preserving target with normal absorption leaked a further <b><span data-r="sim.recipe.leak_target_only" data-d="2"></span> mm</b>, as <math><mrow><mi>G</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><mi>ρ</mi></mrow></math> predicts, and IPCR <b class="c-i"><span data-r="sim.recipe.leak_ipcr" data-d="2"></span> mm</b>.</p></figure>
 </div></section>
 
-<!-- 8 related -->
-<section id="related" class="band"><div class="wrap">
-  <header class="sec"><p class="part">Related work</p><h2>What each structure lets move</h2></header>
-  <div class="prose">
-    <p><b>Hybrid control and oblique projection.</b> Hybrid control assigns motion and force to subspaces of the contact<sup class="c"><a href="#ref-11">11</a>,<a href="#ref-15">15</a>,<a href="#ref-16">16</a>,<a href="#ref-17">17</a></sup>. Filtering a twist onto the constraint is a non-unique projection set by a metric, whose choice was left to applications<sup class="c"><a href="#ref-10">10</a>,<a href="#ref-18">18</a></sup>; later work refined the formulation and the coupling between force and position loops<sup class="c"><a href="#ref-19">19</a>,<a href="#ref-20">20</a>,<a href="#ref-21">21</a>,<a href="#ref-22">22</a></sup>. Compliance is classically selected per task<sup class="c"><a href="#ref-11">11</a>,<a href="#ref-12">12</a></sup>. Allocation, the projector and the rank test are classical foundations; our contribution is their task-relative characterization, with the closed-form cost <math><mrow><mi>G</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><mi>ρ</mi></mrow></math> tested prospectively.</p>
-    <p><b>Unknown geometry.</b> Slope identification from joint signals alone corrects along the normal<sup class="c"><a href="#ref-3">3</a></sup>, and a wrong normal misplaces and distorts the target<sup class="c"><a href="#ref-8">8</a>,<a href="#ref-9">9</a></sup>; constraint estimation remains central to hybrid control<sup class="c"><a href="#ref-23">23</a>,<a href="#ref-24">24</a></sup>. IPCR's target keeps coordinates specified off the surface exact without identifying the normal.</p>
-    <p><b>Least-squares realization.</b> A control-barrier-function program returns the minimum-norm correction along the constraint gradient<sup class="c"><a href="#ref-4">4</a>,<a href="#ref-5">5</a></sup>, as do constrained diffusion policies<sup class="c"><a href="#ref-7">7</a></sup>; operational-space barrier functions weight it in task space<sup class="c"><a href="#ref-6">6</a></sup>, yet on one plane they still correct along a weighted normal; a task-weighted metric recovers the preserving target. iTaSC specifies task outputs and can reach the IPCR target by constraining <math><mrow><mi>L</mi><mi>x</mi></mrow></math> and freeing <math><mrow><mi>𝒟</mi></mrow></math><sup class="c"><a href="#ref-25">25</a></sup>; we add the cost of other corrections and the separate leak of the residual.</p>
-    <p><b>Drawing and learned contact policies.</b> Preserving what the task intends is a stated goal of contact control<sup class="c"><a href="#ref-1">1</a>,<a href="#ref-2">2</a></sup>. Drawing systems keep the planned in-plane position and comply along the surface normal<sup class="c"><a href="#ref-26">26</a></sup> or along the pen<sup class="c"><a href="#ref-13">13</a></sup>, or project patterns along a fixed axis onto a known model and regulate the normal force<sup class="c"><a href="#ref-27">27</a></sup>; normal compliance is the case in which the leakage law predicts a leak. Learned policies predict an interaction frame<sup class="c"><a href="#ref-28">28</a></sup>, force or stiffness modes<sup class="c"><a href="#ref-29">29</a></sup> or a virtual target<sup class="c"><a href="#ref-30">30</a></sup>, or resolve forces in an estimated contact frame<sup class="c"><a href="#ref-2">2</a></sup>; model-based admittance uses motor-current force estimates<sup class="c"><a href="#ref-14">14</a></sup>, and a proprioceptive reflex is trained toward a Euclidean projection<sup class="c"><a href="#ref-1">1</a></sup>. We compare structures, not policies.</p>
-  </div>
-</div></section>
+</div>
 
-<!-- 9 limitations -->
-<section id="limits"><div class="wrap">
-  <header class="sec"><h2>Limitations</h2></header>
+<!-- 8 paper -->
+<section id="paper" class="band"><div class="wrap">
+  <header class="sec"><p class="part">Paper</p><h2>Feasible Is Not Faithful: Task Preservation in Feasibility Restoration</h2></header>
   <div class="prose">
+    <h3>Abstract</h3>
+    <p class="abstract">Restoring feasibility can sacrifice task coordinates: tracking a corrected reference, regulating force and keeping contact do not show that the coordinates a task prescribes were preserved. We analyze this choice for static affine corrections and test it on contact with unknown surfaces. A correction preserves task-selected coordinates <math><mrow><mi>L</mi><mi>x</mi></mrow></math> when its directions lie in <math><mrow><mi>ker</mi><mspace width="0.17em"/><mi>L</mi></mrow></math>, and it can reach every constraint when the constraint is reachable through that subspace. For any other correction direction <math><mrow><mi>B</mi></mrow></math> with <math><mrow><mi>A</mi><mi>B</mi></mrow></math> invertible, the preserved coordinates move by <math><mrow><mi>G</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><mi>ρ</mi></mrow></math>, <math><mrow><mi>G</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mo>−</mo><mi>L</mi><mi>B</mi><msup><mrow><mo stretchy="false">(</mo><mi>A</mi><mi>B</mi><mo stretchy="false">)</mo></mrow><mrow><mo>−</mo><mn>1</mn></mrow></msup></mrow></math>, where <math><mrow><mi>ρ</mi></mrow></math> is the mismatch removed. Intent-preserving constraint realization (IPCR) implements the condition with joint sensing only, estimating no surface, normal or contact event; drawing and box transport share one setting. On hardware, the nearest-point (NP) shift of a drawn circle on an 18° board reached 1.04–1.06 of a prediction fixed before the runs (21.2–21.6 mm, against 0.21 mm for IPCR from the encoders), and on an 11° board video of the ink confirmed the NP–IPCR offset independently of the encoders. In registered simulation, structures given the true normal and an ideal force sensor moved the figure 10–36 times as far as IPCR at 0.90–1.09 of their predicted shift; a crossed design showed that with a task-aware target, absorbing the residual along the normal still leaks the predicted amount; and fixed-axis hybrid control, which meets the condition, preserved placement as well. Blind predictions on new boards failed in four of twelve cells; after an audit fixed two input constants, a separate prospective set on unseen boards passed.</p>
+    <h3>Limitations</h3>
     <p><b>Two tilts on the robot.</b> Drawings on the robot cover boards at about 11° and <span data-n="summary.tilt2_deg" data-d="0"></span>°. Only the <span data-n="summary.tilt2_deg" data-d="0"></span>° prediction was fixed before the runs; at 11° the normal was fitted afterwards, so those ratios check the rule rather than forecast it.</p>
     <p><b>Structures, not complete systems.</b> We compared execution structures under ideal sensing, not complete learned policies or safety filters. The first blind magnitude predictions on new boards failed in four of twelve cells and are reported.</p>
     <p><b>No force bound.</b> IPCR's force peaks were no lower than the nearest point's; preserving intent did not suppress them. Force on the robot is estimated, not sensed: there is no force sensor on the arm. The first touch of the box reached an estimated <span data-r="box.summary.first_touch_N" data-d="0"></span> N, and the cause of the high values is not known yet.</p>
@@ -206,17 +216,14 @@
     <p><b>Yaw free wavers.</b> Over the whole slide its yaw varies by <span data-r="box.summary.uy_sd_all" data-d="1"></span>° (standard deviation) and dips to <span data-n="box.summary.uy_min" data-d="1"></span>°. Its sideways yield was not smaller than with the yaw kept.</p>
     <p><b>Friction and slip.</b> Pens slip at large approach angles on real surfaces<sup class="c"><a href="#ref-27">27</a></sup>. Parts of some figures are faint in the videos; they are shown as recorded.</p>
     <p><b>Scope.</b> The results hold within a static affine model and concern the coordinates the task names, presuming they are named correctly. Our admittance, filters and NMPC make the absorption direction state-dependent, so the law is used as a static prediction. IPCR's remaining sub-millimetre shift is a tracking lead that hybrid position feedback removes. A curved surface's local attitude is not tracked.</p>
-    <details><summary>Hardware setup</summary><dl class="facts">
-      <div><dt>Robot</dt><dd>Dobot CR3A, joint sensing only</dd></div>
-      <div><dt>Pen</dt><dd>spring pen, 5 mm/s, one pass, 12 N target (estimated force)</dd></div>
-      <div><dt>Box</dt><dd>250 × 200 × 150 mm, 8 N target; parallel and tilted wall, three runs per task and wall</dd></div>
-      <div><dt>Runs shown</dt><dd><span data-n="summary.n_hw_draw" data-d="0"></span> drawings (11°: circle 4 and 4, square 3 and 3, star 3 and 3; <span data-n="summary.tilt2_deg" data-d="0"></span>°: circle 3 and 3) and <span data-n="box.summary.runs" data-d="0"></span> carries. Excluded: runs that hit the board during set-up, one stopped by contact with a person and its pair, and box runs cancelled, stopped midway or blocked by a wall placed too far in</dd></div>
-    </dl></details>
-  </div>
-</div></section>
-
-<section id="references" class="band"><div class="wrap"><header class="sec"><h2>References</h2></header>
-<ol class="refs">
+    <details class="more"><summary>Related work</summary>
+    <p><b>Hybrid control and oblique projection.</b> Hybrid control assigns motion and force to subspaces of the contact<sup class="c"><a href="#ref-11">11</a>,<a href="#ref-15">15</a>,<a href="#ref-16">16</a>,<a href="#ref-17">17</a></sup>. Filtering a twist onto the constraint is a non-unique projection set by a metric, whose choice was left to applications<sup class="c"><a href="#ref-10">10</a>,<a href="#ref-18">18</a></sup>; later work refined the formulation and the coupling between force and position loops<sup class="c"><a href="#ref-19">19</a>,<a href="#ref-20">20</a>,<a href="#ref-21">21</a>,<a href="#ref-22">22</a></sup>. Compliance is classically selected per task<sup class="c"><a href="#ref-11">11</a>,<a href="#ref-12">12</a></sup>. Allocation, the projector and the rank test are classical foundations; our contribution is their task-relative characterization, with the closed-form cost <math><mrow><mi>G</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo><mi>ρ</mi></mrow></math> tested prospectively.</p>
+    <p><b>Unknown geometry.</b> Slope identification from joint signals alone corrects along the normal<sup class="c"><a href="#ref-3">3</a></sup>, and a wrong normal misplaces and distorts the target<sup class="c"><a href="#ref-8">8</a>,<a href="#ref-9">9</a></sup>; constraint estimation remains central to hybrid control<sup class="c"><a href="#ref-23">23</a>,<a href="#ref-24">24</a></sup>. IPCR's target keeps coordinates specified off the surface exact without identifying the normal.</p>
+    <p><b>Least-squares realization.</b> A control-barrier-function program returns the minimum-norm correction along the constraint gradient<sup class="c"><a href="#ref-4">4</a>,<a href="#ref-5">5</a></sup>, as do constrained diffusion policies<sup class="c"><a href="#ref-7">7</a></sup>; operational-space barrier functions weight it in task space<sup class="c"><a href="#ref-6">6</a></sup>, yet on one plane they still correct along a weighted normal; a task-weighted metric recovers the preserving target. iTaSC specifies task outputs and can reach the IPCR target by constraining <math><mrow><mi>L</mi><mi>x</mi></mrow></math> and freeing <math><mrow><mi>𝒟</mi></mrow></math><sup class="c"><a href="#ref-25">25</a></sup>; we add the cost of other corrections and the separate leak of the residual.</p>
+    <p><b>Drawing and learned contact policies.</b> Preserving what the task intends is a stated goal of contact control<sup class="c"><a href="#ref-1">1</a>,<a href="#ref-2">2</a></sup>. Drawing systems keep the planned in-plane position and comply along the surface normal<sup class="c"><a href="#ref-26">26</a></sup> or along the pen<sup class="c"><a href="#ref-13">13</a></sup>, or project patterns along a fixed axis onto a known model and regulate the normal force<sup class="c"><a href="#ref-27">27</a></sup>; normal compliance is the case in which the leakage law predicts a leak. Learned policies predict an interaction frame<sup class="c"><a href="#ref-28">28</a></sup>, force or stiffness modes<sup class="c"><a href="#ref-29">29</a></sup> or a virtual target<sup class="c"><a href="#ref-30">30</a></sup>, or resolve forces in an estimated contact frame<sup class="c"><a href="#ref-2">2</a></sup>; model-based admittance uses motor-current force estimates<sup class="c"><a href="#ref-14">14</a></sup>, and a proprioceptive reflex is trained toward a Euclidean projection<sup class="c"><a href="#ref-1">1</a></sup>. We compare structures, not policies.</p>
+    </details>
+    <details class="more"><summary>References</summary>
+      <ol class="refs">
 <li id="ref-1" value="1">Q. Nguyen, Y. Kim, and J. Lee, “Learning reflexive behavior for contact-rich manipulation,” 2026, <em><a href="https://arxiv.org/abs/2610.02811">arXiv:2610.02811</a></em>.</li>
 <li id="ref-2" value="2">J. Hong, D. Song, S. Kim, and M. Seo, “Contact-aware imitation learning through contact factorization,” 2026, <em><a href="https://arxiv.org/abs/2610.09533">arXiv:2610.09533</a></em>.</li>
 <li id="ref-3" value="3">Z. Doulgeri and Y. Karayiannidis, “Force/position regulation for a robot in compliant contact using adaptive surface slope identification,” <em>IEEE Trans. Autom. Control</em>, vol. 53, no. 9, pp. 2116–2122, 2008.</li>
@@ -247,11 +254,10 @@
 <li id="ref-28" value="28">H. Fang <em>et al.</em>, “Force Policy: Learning hybrid force-position control policy under interaction frame for contact-rich manipulation,” in <em>Proc. Robot.: Sci. Syst.</em>, 2026.</li>
 <li id="ref-29" value="29">Y. Yang <em>et al.</em>, “TDC: Sim-to-real transferable directional compliance for contact-rich manipulation,” 2026, <em><a href="https://arxiv.org/abs/2602.14174">arXiv:2602.14174</a></em>.</li>
 <li id="ref-30" value="30">Y. Hou, Z. Liu, C. Chi, E. Cousineau, N. Kuppuswamy, S. Feng, B. Burchfiel, and S. Song, “Adaptive compliance policy: Learning approximate compliance for diffusion guided control,” in <em>Proc. IEEE Int. Conf. Robot. Autom.</em>, 2025, pp. 4829–4836.</li>
-</ol>
-<p class="cap refnote">Works cited on this page, numbered as in the manuscript.</p></div></section>
-
-<section id="cite"><div class="wrap">
-  <h2>Cite</h2>
+      </ol>
+      <p class="cap refnote">Works cited on this page, numbered as in the manuscript.</p>
+    </details>
+    <h3 id="cite">Cite</h3>
   <pre class="bib"><code>@unpublished{kim2026ipcr,
   title  = {Feasible Is Not Faithful: Task Preservation in
             Feasibility Restoration},
@@ -259,6 +265,7 @@
   note   = {Manuscript in preparation},
   year   = {2026}
 }</code></pre>
+  </div>
 </div></section>
 </main>
 <footer><div class="wrap">Every measured number on this page is read from <a href="assets/data/manifest.json">manifest.json</a>, built from the run logs.</div></footer>

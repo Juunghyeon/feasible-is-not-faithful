@@ -156,4 +156,10 @@
     for (const [k, c] of [['uy', 's-y'], ['uf', 's-i']]) for (const o of M.box[k]) el('path', { d: path(o.trace, p => [X(p[0]), Y(p[1])]), fill: 'none', class: c, 'stroke-width': 1.6, 'stroke-opacity': .8 }, s);
     tx(s, r + 8, Y(0) + 4, 'keep yaw', 'tx-i', { 'font-weight': 700 }); tx(s, r + 8, Y(M.box.summary.uy_mean[0]) + 4, 'yaw free', 'tx-y', { 'font-weight': 700 });
   })();
+  // open the folded references when a citation is followed; copy the BibTeX
+  const openRef = h => { const t = h && document.getElementById(h.slice(1)); const d = t && t.closest('details'); if (d) d.open = true; };
+  document.addEventListener('click', e => { const a = e.target.closest('a[href^="#ref-"]'); if (a) openRef(a.getAttribute('href')); });
+  if (location.hash.startsWith('#ref-')) openRef(location.hash);
+  const bib = document.querySelector('.bib');
+  if (bib && navigator.clipboard) { const b = document.createElement('button'); b.type = 'button'; b.className = 'copy'; b.textContent = 'Copy'; b.onclick = () => navigator.clipboard.writeText(bib.querySelector('code').innerText).then(() => { b.textContent = 'Copied'; setTimeout(() => { b.textContent = 'Copy'; }, 1500); }).catch(() => {}); bib.style.position = 'relative'; bib.append(b); }
 })();

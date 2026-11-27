@@ -233,3 +233,19 @@ details.more { margin-top: 26px; } details.more .thm { margin: 14px 0; }
 
 .note { max-width: var(--text); }
 .teaser { grid-template-columns: minmax(0, 740px) 290px; }
+
+/* five parts: Motivation, Key idea, Method, Results, Paper */
+#motivation { padding-top: 64px; }
+.prose .ask { font-weight: 700; color: var(--ink); margin-top: 16px; font-size: 1.08rem; }
+#idea .tryrow { margin-top: 26px; }
+#method .prose:first-of-type { margin-bottom: 8px; }
+#paper .sec h2 { font-size: clamp(1.3rem, 2.4vw, 1.75rem); max-width: 30em; margin: 0 auto; text-wrap: balance; }
+#paper .prose h3 { margin: 30px 0 10px; font-size: 1.12rem; }
+#paper .prose h3:first-child { margin-top: 0; }
+#paper .abstract { line-height: 1.65; }
+#paper details.more { margin-top: 22px; }
+#paper details.more > summary { font-weight: 700; cursor: pointer; }
+#paper .refs { margin-top: 14px; }
+#paper #cite { scroll-margin-top: 80px; }
+.bib .copy { position: absolute; top: 10px; right: 10px; font: 600 .78rem Inter, sans-serif; border: 1px solid var(--line); background: var(--card); color: var(--mute); border-radius: 999px; padding: 4px 12px; cursor: pointer; }
+.bib .copy:hover { color: var(--ink); }
